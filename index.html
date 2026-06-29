@@ -26,8 +26,25 @@
       margin-bottom: 2.5rem;
     }
 
-    .blockchain-logo {
-      margin-bottom: 1rem;
+    .blockchain-lockup {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 1.2rem;
+    }
+
+    .blockchain-lockup img {
+      height: 40px;
+      width: auto;
+      display: block;
+    }
+
+    .blockchain-wordmark {
+      font-size: 26px;
+      font-weight: 500;
+      color: #111;
+      letter-spacing: -0.02em;
+      line-height: 1;
     }
 
     .site-name {
@@ -97,42 +114,15 @@
       color: #bbb;
       flex-shrink: 0;
     }
-
-    .site-footer {
-      font-size: 14px;
-      color: #bbb;
-      letter-spacing: 0.05em;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .footer-link {
-      color: #bbb;
-      text-decoration: none;
-    }
-
-    .footer-link:hover { color: #111; }
   </style>
 </head>
 <body>
 <div class="page">
 
   <header class="site-header">
-    <div class="blockchain-logo">
-      <!-- Blockchain.com logo: red/coral diamond + wordmark, current brand colors -->
-      <svg height="28" viewBox="0 0 220 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Diamond icon built from 4 rhombus facets -->
-        <!-- Top facet -->
-        <polygon points="18,0 30,10 18,18 6,10" fill="#C3272B"/>
-        <!-- Left facet -->
-        <polygon points="6,10 18,18 6,26 0,18" fill="#9B1F22" opacity="0.85"/>
-        <!-- Right facet -->
-        <polygon points="30,10 36,18 24,26 18,18" fill="#9B1F22" opacity="0.85"/>
-        <!-- Bottom facet -->
-        <polygon points="6,26 18,18 30,26 18,36" fill="#7A1719" opacity="0.75"/>
-        <!-- Wordmark: "Blockchain" -->
-        <text x="46" y="26" font-family="'DM Mono', monospace" font-size="17" font-weight="500" fill="#111" letter-spacing="-0.4">Blockchain</text>
-      </svg>
+    <div class="blockchain-lockup">
+      <img src="https://img.logokit.com/blockchain.com?variant=icon" alt="Blockchain.com">
+      <span class="blockchain-wordmark">Blockchain</span>
     </div>
     <div class="site-name">Justin Thom</div>
     <div class="site-sub">
@@ -151,16 +141,12 @@
     <a class="proj-row" href="MARA-Holdings-Blockchain-Proposal.pdf" target="_blank">
       <div class="proj-left">
         <div class="proj-title">MARA Holdings — Bespoke OTC Options Proposal</div>
-        <div class="proj-desc">Institutional pitch covering protective puts, zero-cost collar mechanics, and covered call yield strategies for a public BTC mining treasury. Includes a six-step OTC onboarding and implementation roadmap — structured as a Blockchain.com institutional desk engagement.</div>
+        <div class="proj-desc">Bilateral OTC options pitch for a public BTC mining treasury covering protective puts, zero-cost collars, and covered call yield strategies with a six-step implementation roadmap.</div>
       </div>
       <span class="proj-arrow">→</span>
     </a>
 
   </div>
-
-  <footer class="site-footer">
-    <a class="footer-link" href="https://github.com/jthom-crypto" target="_blank">github →</a>
-  </footer>
 
 </div>
 </body>
