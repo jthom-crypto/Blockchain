@@ -8,288 +8,71 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      background: #f7f7f5;
-      color: #111;
-      font-family: 'DM Mono', monospace;
-      -webkit-font-smoothing: antialiased;
-      font-size: 13px;
-    }
-
-    .page {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 2.5rem 2rem 4rem;
-    }
-
-    /* Header */
-    .header {
-      margin-bottom: 2rem;
-      border-bottom: 0.5px solid #ddd;
-      padding-bottom: 1.5rem;
-    }
-
-    .header-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0.5rem;
-    }
-
-    .lockup {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .title-block h1 {
-      font-size: 18px;
-      font-weight: 500;
-      letter-spacing: -0.02em;
-      color: #111;
-    }
-
-    .title-block p {
-      font-size: 12px;
-      color: #999;
-      margin-top: 0.2rem;
-      letter-spacing: 0.02em;
-    }
-
-    .summary-stats {
-      display: flex;
-      gap: 2rem;
-      margin-top: 1.2rem;
-    }
-
-    .stat {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .stat-val {
-      font-size: 22px;
-      font-weight: 500;
-      color: #111;
-      letter-spacing: -0.02em;
-    }
-
-    .stat-label {
-      font-size: 10px;
-      color: #aaa;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    /* Filters */
-    .filters {
-      display: flex;
-      gap: 0.6rem;
-      margin-bottom: 1.2rem;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .filter-label {
-      font-size: 10px;
-      color: #aaa;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-right: 0.2rem;
-      align-self: center;
-    }
-
-    .filter-btn {
-      background: #fff;
-      border: 0.5px solid #ddd;
-      border-radius: 3px;
-      padding: 4px 10px;
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      color: #555;
-      cursor: pointer;
-      transition: all 0.1s;
-      letter-spacing: 0.02em;
-    }
-
+    body { background: #f7f7f5; color: #111; font-family: 'DM Mono', monospace; -webkit-font-smoothing: antialiased; font-size: 13px; }
+    .page { max-width: 1100px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+    .header { margin-bottom: 2rem; border-bottom: 0.5px solid #ddd; padding-bottom: 1.5rem; }
+    .header-top { display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem; }
+    .title-block h1 { font-size: 18px; font-weight: 500; letter-spacing: -0.02em; color: #111; }
+    .title-block p { font-size: 12px; color: #999; margin-top: 0.2rem; }
+    .summary-stats { display: flex; gap: 2rem; margin-top: 1.2rem; }
+    .stat { display: flex; flex-direction: column; gap: 2px; }
+    .stat-val { font-size: 22px; font-weight: 500; color: #111; letter-spacing: -0.02em; }
+    .stat-label { font-size: 10px; color: #aaa; letter-spacing: 0.1em; text-transform: uppercase; }
+    .filters { display: flex; gap: 0.6rem; margin-bottom: 1.2rem; flex-wrap: wrap; align-items: center; }
+    .filter-label { font-size: 10px; color: #aaa; letter-spacing: 0.1em; text-transform: uppercase; margin-right: 0.2rem; align-self: center; }
+    .filter-btn { background: #fff; border: 0.5px solid #ddd; border-radius: 3px; padding: 4px 10px; font-family: 'DM Mono', monospace; font-size: 11px; color: #555; cursor: pointer; transition: all 0.1s; }
     .filter-btn:hover { border-color: #999; color: #111; }
-    .filter-btn.active {
-      background: #111;
-      border-color: #111;
-      color: #fff;
-    }
-
-    .filter-sep {
-      width: 0.5px;
-      height: 20px;
-      background: #ddd;
-      margin: 0 0.3rem;
-    }
-
-    /* Search */
-    .search-wrap {
-      margin-left: auto;
-    }
-
-    .search-wrap input {
-      font-family: 'DM Mono', monospace;
-      font-size: 12px;
-      border: 0.5px solid #ddd;
-      border-radius: 3px;
-      padding: 4px 10px;
-      width: 200px;
-      outline: none;
-      color: #111;
-      background: #fff;
-    }
-
+    .filter-btn.active { background: #111; border-color: #111; color: #fff; }
+    .filter-sep { width: 0.5px; height: 20px; background: #ddd; margin: 0 0.3rem; }
+    .search-wrap { margin-left: auto; }
+    .search-wrap input { font-family: 'DM Mono', monospace; font-size: 12px; border: 0.5px solid #ddd; border-radius: 3px; padding: 4px 10px; width: 200px; outline: none; color: #111; background: #fff; }
     .search-wrap input:focus { border-color: #999; }
     .search-wrap input::placeholder { color: #bbb; }
-
-    /* Table */
-    .table-wrap {
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #fff;
-      border: 0.5px solid #e5e5e5;
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    thead th {
-      background: #f7f7f5;
-      border-bottom: 0.5px solid #e5e5e5;
-      padding: 8px 12px;
-      text-align: left;
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #aaa;
-      font-weight: 400;
-      white-space: nowrap;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    thead th:hover { color: #555; }
-    thead th.sorted { color: #111; }
-
-    tbody tr {
-      border-bottom: 0.5px solid #f0f0f0;
-      transition: background 0.08s;
-    }
-
+    .count-bar { font-size: 11px; color: #aaa; margin-bottom: 0.6rem; }
+    .count-bar span { color: #111; font-weight: 500; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border: 0.5px solid #e5e5e5; border-radius: 4px; overflow: hidden; }
+    thead th { background: #f7f7f5; border-bottom: 0.5px solid #e5e5e5; padding: 8px 12px; text-align: left; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #aaa; font-weight: 400; white-space: nowrap; }
+    tbody tr { border-bottom: 0.5px solid #f0f0f0; transition: background 0.08s; }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: #fafaf8; }
     tbody tr.hidden { display: none; }
-
-    td {
-      padding: 9px 12px;
-      vertical-align: top;
-      line-height: 1.5;
-    }
-
-    .firm-name {
-      font-weight: 500;
-      color: #111;
-      font-size: 13px;
-      white-space: nowrap;
-    }
-
-    .firm-city {
-      font-size: 11px;
-      color: #aaa;
-    }
-
-    /* Type badges */
-    .badge {
-      display: inline-block;
-      padding: 2px 7px;
-      border-radius: 2px;
-      font-size: 10px;
-      letter-spacing: 0.06em;
-      font-weight: 400;
-      white-space: nowrap;
-    }
-
+    td { padding: 9px 12px; vertical-align: top; line-height: 1.5; }
+    .firm-name { font-weight: 500; color: #111; font-size: 13px; white-space: nowrap; }
+    .firm-city { font-size: 11px; color: #aaa; }
+    .badge { display: inline-block; padding: 2px 7px; border-radius: 2px; font-size: 10px; letter-spacing: 0.06em; white-space: nowrap; }
     .badge-hf  { background: #EEF2FF; color: #4338CA; }
     .badge-fo  { background: #F0FDF4; color: #166534; }
     .badge-vc  { background: #FFF7ED; color: #9A3412; }
     .badge-hft { background: #FDF4FF; color: #7E22CE; }
-
-    /* Priority */
-    .pri-1 { color: #111; font-weight: 500; }
-    .pri-2 { color: #555; }
-    .pri-3 { color: #aaa; }
-
-    /* Product fit */
     .product-tags { display: flex; gap: 4px; flex-wrap: wrap; }
-    .ptag {
-      display: inline-block;
-      padding: 1px 6px;
-      border-radius: 2px;
-      font-size: 10px;
-      background: #f0f0ee;
-      color: #555;
-      white-space: nowrap;
-    }
-
-    /* Crypto exposure */
+    .ptag { display: inline-block; padding: 1px 6px; border-radius: 2px; font-size: 10px; background: #f0f0ee; color: #555; white-space: nowrap; }
     .exp-confirmed { color: #166534; }
     .exp-likely    { color: #555; }
     .exp-exploring { color: #aaa; }
-
-    /* AUM */
     .aum { color: #555; white-space: nowrap; }
-
-    .rationale { font-size: 11px; color: #888; line-height: 1.55; max-width: 260px; }
-
-    /* Count bar */
-    .count-bar {
-      font-size: 11px;
-      color: #aaa;
-      margin-bottom: 0.6rem;
-    }
-
-    .count-bar span { color: #111; font-weight: 500; }
-
-    /* Footer */
-    .footer {
-      margin-top: 2rem;
-      font-size: 11px;
-      color: #bbb;
-      letter-spacing: 0.04em;
-    }
+    .rationale { font-size: 11px; color: #888; line-height: 1.55; max-width: 240px; }
+    .footer { margin-top: 2rem; font-size: 11px; color: #bbb; }
   </style>
 </head>
 <body>
 <div class="page">
-
   <div class="header">
     <div class="header-top">
-      <div class="lockup">
-        <svg role="img" viewBox="0 0 24 24" height="28" width="28" fill="#E5374B" xmlns="http://www.w3.org/2000/svg">
-          <path d="M19.8285 6.6117l-5.52-5.535a3.1352 3.1352 0 00-4.5 0l-5.535 5.535 7.755 3.87zm2.118 2.235l1.095 1.095a3.12 3.12 0 010 4.5L14.22 23.3502a2.6846 2.6846 0 01-.72.525V13.0767zm-19.893 0l-1.095 1.095a3.1198 3.1198 0 000 4.5L9.78 23.3502c.2091.214.4525.3914.72.525V13.0767z"/>
-        </svg>
-        <div class="title-block">
-          <h1>AMER Institutional Prospect Pipeline</h1>
-          <p>Blockchain.com OTC Desk — Institutional Sales Associate Application &nbsp;·&nbsp; Justin Thom &nbsp;·&nbsp; July 2026</p>
-        </div>
+      <svg role="img" viewBox="0 0 24 24" height="26" width="26" fill="#E5374B" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19.8285 6.6117l-5.52-5.535a3.1352 3.1352 0 00-4.5 0l-5.535 5.535 7.755 3.87zm2.118 2.235l1.095 1.095a3.12 3.12 0 010 4.5L14.22 23.3502a2.6846 2.6846 0 01-.72.525V13.0767zm-19.893 0l-1.095 1.095a3.1198 3.1198 0 000 4.5L9.78 23.3502c.2091.214.4525.3914.72.525V13.0767z"/>
+      </svg>
+      <div class="title-block">
+        <h1>AMER Institutional Prospect Pipeline</h1>
+        <p>Blockchain.com OTC Desk &nbsp;·&nbsp; Institutional Sales Associate Application &nbsp;·&nbsp; Justin Thom &nbsp;·&nbsp; July 2026</p>
       </div>
     </div>
     <div class="summary-stats">
-      <div class="stat"><span class="stat-val" id="count-total">45</span><span class="stat-label">Total Prospects</span></div>
-      <div class="stat"><span class="stat-val" id="count-t1">15</span><span class="stat-label">Tier 1 Targets</span></div>
-      <div class="stat"><span class="stat-val" id="count-hf">14</span><span class="stat-label">Hedge Funds</span></div>
-      <div class="stat"><span class="stat-val" id="count-fo">10</span><span class="stat-label">Family Offices</span></div>
-      <div class="stat"><span class="stat-val" id="count-vc">11</span><span class="stat-label">VCs</span></div>
-      <div class="stat"><span class="stat-val" id="count-hft">10</span><span class="stat-label">HFTs / Market Makers</span></div>
+      <div class="stat"><span class="stat-val" id="count-total">40</span><span class="stat-label">Total Prospects</span></div>
+      <div class="stat"><span class="stat-val">12</span><span class="stat-label">Hedge Funds</span></div>
+      <div class="stat"><span class="stat-val">10</span><span class="stat-label">Family Offices</span></div>
+      <div class="stat"><span class="stat-val">9</span><span class="stat-label">VCs</span></div>
+      <div class="stat"><span class="stat-val">9</span><span class="stat-label">HFTs / Market Makers</span></div>
     </div>
   </div>
 
@@ -301,106 +84,96 @@
     <button class="filter-btn" data-type="VC">VC</button>
     <button class="filter-btn" data-type="HFT">HFT / MM</button>
     <div class="filter-sep"></div>
-    <span class="filter-label">Priority</span>
-    <button class="filter-btn active" data-priority="all">All</button>
-    <button class="filter-btn" data-priority="1">Tier 1</button>
-    <button class="filter-btn" data-priority="2">Tier 2</button>
-    <button class="filter-btn" data-priority="3">Tier 3</button>
-    <div class="filter-sep"></div>
     <span class="filter-label">Product</span>
     <button class="filter-btn active" data-product="all">All</button>
     <button class="filter-btn" data-product="OTC Spot">OTC Spot</button>
     <button class="filter-btn" data-product="Options">Options</button>
     <button class="filter-btn" data-product="Market Making">Mkt Making</button>
+    <div class="filter-sep"></div>
+    <span class="filter-label">Exposure</span>
+    <button class="filter-btn active" data-exposure="all">All</button>
+    <button class="filter-btn" data-exposure="confirmed">Confirmed</button>
+    <button class="filter-btn" data-exposure="likely">Likely</button>
+    <button class="filter-btn" data-exposure="exploring">Exploring</button>
     <div class="search-wrap">
       <input type="text" id="search" placeholder="Search firm...">
     </div>
   </div>
 
-  <div class="count-bar">Showing <span id="visible-count">45</span> of 45 prospects</div>
+  <div class="count-bar">Showing <span id="visible-count">40</span> of 40 prospects</div>
 
   <div class="table-wrap">
-  <table id="pipeline">
+  <table>
     <thead>
       <tr>
         <th>Firm</th>
         <th>Type</th>
-        <th>HQ</th>
         <th>Est. AUM</th>
         <th>Crypto Exposure</th>
         <th>Product Fit</th>
-        <th>Priority</th>
         <th>Rationale</th>
       </tr>
     </thead>
-    <tbody id="tbody">
-    </tbody>
+    <tbody id="tbody"></tbody>
   </table>
   </div>
 
   <div class="footer">
-    Sources: Public disclosures, 13F filings, AIMA/PwC Crypto Hedge Fund Report 2025, Crypto Fund Research, company websites. AUM figures are estimates. Crypto exposure based on public disclosures and industry reporting.
+    Sources: Public disclosures, 13F filings, AIMA/PwC Crypto Hedge Fund Report 2025, Crypto Fund Research, company websites. AUM figures are estimates based on public reporting.
   </div>
-
 </div>
 
 <script>
 const prospects = [
-  // HEDGE FUNDS (14)
-  { firm:"Tudor Investment Corp", city:"Greenwich, CT", type:"HF", aum:"$40B+", exposure:"confirmed", products:["OTC Spot","Options"], priority:1, rationale:"Paul Tudor Jones publicly allocated to BTC as inflation hedge; large AUM with need for block execution and options overlay." },
-  { firm:"Millennium Management", city:"New York, NY", type:"HF", aum:"$70B+", exposure:"confirmed", products:["OTC Spot","Options","Market Making"], priority:1, rationale:"Multi-strat with crypto pod strategy; confirmed BTC ETF holdings via 13F; natural fit for options desk given multi-strategy mandate." },
-  { firm:"Point72 Asset Management", city:"Stamford, CT", type:"HF", aum:"$35B+", exposure:"likely", products:["OTC Spot","Options"], priority:1, rationale:"Steve Cohen publicly expressed crypto interest; systematic and macro pods exploring digital asset exposure." },
-  { firm:"Two Sigma Investments", city:"New York, NY", type:"HF", aum:"$60B+", exposure:"likely", products:["OTC Spot","Market Making"], priority:1, rationale:"Quant-driven with significant tech infrastructure; active in crypto basis trades and derivatives per industry reports." },
-  { firm:"Brevan Howard (BH Digital)", city:"New York, NY", type:"HF", aum:"$35B (BH Digital ~$3B)", exposure:"confirmed", products:["Options","OTC Spot"], priority:1, rationale:"Dedicated crypto platform under Alan Howard; experienced options buyer with vol overlay strategies." },
-  { firm:"Galaxy Digital", city:"New York, NY", type:"HF", aum:"$5B+", exposure:"confirmed", products:["OTC Spot","Options","Market Making"], priority:1, rationale:"Crypto-native fund and institutional desk; active in liquid strategies with ongoing need for block OTC and options sourcing." },
-  { firm:"Pantera Capital", city:"Menlo Park, CA", type:"HF", aum:"$4.8B", exposure:"confirmed", products:["OTC Spot","Options"], priority:1, rationale:"Oldest institutional crypto fund; manages Bitcoin, venture, and liquid funds requiring OTC block execution at scale." },
-  { firm:"Skybridge Capital", city:"New York, NY", type:"HF", aum:"$2.5B", exposure:"confirmed", products:["OTC Spot","Options"], priority:2, rationale:"Anthony Scaramucci confirmed large BTC allocation; hedge fund with ongoing need for spot block execution and downside protection." },
-  { firm:"Rothschild Investment Corp", city:"Chicago, IL", type:"HF", aum:"$1B+", exposure:"confirmed", products:["OTC Spot"], priority:2, rationale:"Filed 13F showing BTC ETF holdings; traditional multi-family office evolving into direct crypto exposure." },
-  { firm:"Moore Capital Management", city:"New York, NY", type:"HF", aum:"$10B+", exposure:"exploring", products:["OTC Spot","Options"], priority:2, rationale:"Global macro with history of commodity hedging; natural candidate for BTC options overlays as macro hedge." },
-  { firm:"Caxton Associates", city:"New York, NY", type:"HF", aum:"$10B+", exposure:"exploring", products:["OTC Spot","Options"], priority:2, rationale:"Bruce Kovner-founded global macro; macro vol strategies translate directly to BTC options positioning." },
-  { firm:"Pythagoras Investments", city:"New York, NY", type:"HF", aum:"$500M+", exposure:"confirmed", products:["OTC Spot","Market Making"], priority:2, rationale:"Award-winning crypto arbitrage fund; best performing crypto fund over 5 and 10 years per Hedge Fund Journal 2025; active OTC buyer." },
-  { firm:"Tephra Digital", city:"New York, NY", type:"HF", aum:"$200M+", exposure:"confirmed", products:["OTC Spot","Options"], priority:2, rationale:"Crypto-native hedge fund posting +9.3% in May 2025; active in digital asset vol strategies requiring OTC derivatives access." },
-  { firm:"Multicoin Capital", city:"Austin, TX", type:"HF", aum:"$1B+", exposure:"confirmed", products:["OTC Spot","Options"], priority:2, rationale:"Liquid crypto hedge fund AUM grew 50%+ YoY in 2025; actively trades spot and derivatives across major assets." },
+  // HEDGE FUNDS
+  { firm:"Tudor Investment Corp",       city:"Greenwich, CT",      type:"HF",  aum:"$40B+",             exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"Paul Tudor Jones confirmed BTC allocation; block execution and options overlay needed for large position management." },
+  { firm:"Millennium Management",       city:"New York, NY",       type:"HF",  aum:"$70B+",             exposure:"confirmed", products:["OTC Spot","Options","Market Making"], rationale:"Confirmed BTC ETF holdings via 13F; crypto pods use multiple external OTC desks for execution quality and counterparty diversification." },
+  { firm:"Point72 Asset Management",    city:"Stamford, CT",       type:"HF",  aum:"$35B+",             exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"Confirmed stake in crypto-payments firm Alt5 Sigma; macro and systematic pods actively building digital asset exposure." },
+  { firm:"Two Sigma Investments",       city:"New York, NY",       type:"HF",  aum:"$60B+",             exposure:"likely",    products:["OTC Spot","Market Making"],           rationale:"Quant multi-strat active in crypto basis trades; external OTC desks used for large block spot at institutional scale." },
+  { firm:"Brevan Howard (BH Digital)",  city:"New York, NY",       type:"HF",  aum:"~$3B (BH Digital)", exposure:"confirmed", products:["Options","OTC Spot"],                rationale:"Dedicated crypto platform with active macro vol and options overlay strategies requiring bilateral OTC execution." },
+  { firm:"Skybridge Capital",           city:"New York, NY",       type:"HF",  aum:"$2.5B",             exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"Confirmed large BTC allocation; ongoing need for block spot execution and downside protection programs." },
+  { firm:"Rothschild Investment Corp",  city:"Chicago, IL",        type:"HF",  aum:"$1B+",              exposure:"confirmed", products:["OTC Spot"],                          rationale:"13F shows BTC ETF holdings; traditional manager building toward direct crypto allocation via OTC." },
+  { firm:"Moore Capital Management",    city:"New York, NY",       type:"HF",  aum:"$10B+",             exposure:"exploring", products:["OTC Spot","Options"],                rationale:"Global macro with commodity hedging expertise; natural candidate for BTC options as portfolio-level macro hedge." },
+  { firm:"Caxton Associates",           city:"New York, NY",       type:"HF",  aum:"$10B+",             exposure:"exploring", products:["OTC Spot","Options"],                rationale:"Global macro fund; commodity and FX vol background maps directly to BTC options strategies." },
+  { firm:"Pythagoras Investments",      city:"New York, NY",       type:"HF",  aum:"$500M+",            exposure:"confirmed", products:["OTC Spot","Market Making"],           rationale:"Best performing crypto fund over 5 and 10 years per HFJ 2025; active OTC spot buyer for arbitrage strategies." },
+  { firm:"Tephra Digital",              city:"New York, NY",       type:"HF",  aum:"$200M+",            exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"Crypto-native fund posting +9.3% in May 2025; bilateral OTC derivatives access core to their vol strategy." },
+  { firm:"ExodusPoint Capital",         city:"New York, NY",       type:"HF",  aum:"$12B+",             exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"Confirmed stake in Alt5 Sigma; multi-strat expanding crypto exposure through external OTC counterparties." },
 
-  // FAMILY OFFICES (10)
-  { firm:"Iconiq Capital", city:"San Francisco, CA", type:"FO", aum:"$80B+", exposure:"likely", products:["OTC Spot","Options"], priority:1, rationale:"Multi-family office for Silicon Valley founders (Zuckerberg, Dorsey); significant tech and alternatives allocation; natural crypto explorers." },
-  { firm:"Emerson Collective", city:"Palo Alto, CA", type:"FO", aum:"$5B+", exposure:"likely", products:["OTC Spot"], priority:2, rationale:"Laurene Powell Jobs family office with tech-forward alternatives mandate; consistent exploration of digital asset allocation." },
-  { firm:"Bezos Expeditions", city:"Seattle, WA", type:"FO", aum:"$10B+", exposure:"exploring", products:["OTC Spot","Options"], priority:2, rationale:"Jeff Bezos family office with history of venture and alternatives; large AUM suitable for structured OTC entry." },
-  { firm:"Euclidean Capital", city:"New York, NY", type:"FO", aum:"$3B+", exposure:"likely", products:["OTC Spot","Options"], priority:2, rationale:"James Simons family office; quant-oriented with appetite for systematic digital asset strategies and options overlays." },
-  { firm:"Winklevoss Family Office", city:"New York, NY", type:"FO", aum:"$1B+", exposure:"confirmed", products:["OTC Spot","Options"], priority:1, rationale:"Deep crypto conviction; large personal BTC and ETH holdings; natural buyer of structured OTC options for treasury management." },
-  { firm:"Valor Equity Partners", city:"Chicago, IL", type:"FO", aum:"$2B+", exposure:"likely", products:["OTC Spot"], priority:2, rationale:"Antonio Gracias family office with Tesla and SpaceX concentration; exploring crypto as portfolio diversifier." },
-  { firm:"Thrive Capital", city:"New York, NY", type:"FO", aum:"$5B+", exposure:"likely", products:["OTC Spot","Options"], priority:2, rationale:"Josh Kushner-led office with aggressive tech and alternatives mandate; active crypto monitoring per industry sources." },
-  { firm:"Founders Fund", city:"San Francisco, CA", type:"FO", aum:"$12B+", exposure:"confirmed", products:["OTC Spot","Options"], priority:1, rationale:"Peter Thiel early Bitcoin advocate with confirmed BTC holdings; family office layer requires OTC spot execution for large-scale block trades." },
-  { firm:"Tiger 21", city:"New York, NY", type:"FO", aum:"$180B (network)", exposure:"likely", products:["OTC Spot"], priority:3, rationale:"Network of UHNW members with growing crypto interest; 74% of family offices per BNY now exploring or invested in crypto." },
-  { firm:"Pritzker Private Capital", city:"Chicago, IL", type:"FO", aum:"$3B+", exposure:"exploring", products:["OTC Spot"], priority:3, rationale:"Pritzker family office with diversified alternatives mandate; AMER-based with institutional onboarding readiness." },
+  // FAMILY OFFICES
+  { firm:"Iconiq Capital",              city:"San Francisco, CA",  type:"FO",  aum:"$80B+",             exposure:"likely",    products:["OTC Spot","Options"],                rationale:"Multi-family office for major tech founders; large alternatives mandate with strong digital asset awareness." },
+  { firm:"Founders Fund",               city:"San Francisco, CA",  type:"FO",  aum:"$12B+",             exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"Peter Thiel confirmed early Bitcoin holder; large-scale BTC positions need discreet block OTC execution." },
+  { firm:"Winklevoss Family Office",    city:"New York, NY",       type:"FO",  aum:"$1B+",              exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"Deep BTC and ETH conviction; natural buyer of structured OTC options for treasury management." },
+  { firm:"Euclidean Capital",           city:"New York, NY",       type:"FO",  aum:"$3B+",              exposure:"likely",    products:["OTC Spot","Options"],                rationale:"Jim Simons family office; quant orientation maps well to systematic digital asset strategies and options overlays." },
+  { firm:"Emerson Collective",          city:"Palo Alto, CA",      type:"FO",  aum:"$5B+",              exposure:"likely",    products:["OTC Spot"],                          rationale:"Tech-forward alternatives mandate with consistent digital asset exploration." },
+  { firm:"Bezos Expeditions",           city:"Seattle, WA",        type:"FO",  aum:"$10B+",             exposure:"exploring", products:["OTC Spot","Options"],                rationale:"Large AUM with venture and alternatives focus; structured OTC entry well suited to their mandate and scale." },
+  { firm:"Valor Equity Partners",       city:"Chicago, IL",        type:"FO",  aum:"$2B+",              exposure:"likely",    products:["OTC Spot"],                          rationale:"Tech-concentrated portfolio exploring crypto as a diversifier; AMER-based institutional onboarding ready." },
+  { firm:"Thrive Capital",              city:"New York, NY",       type:"FO",  aum:"$5B+",              exposure:"likely",    products:["OTC Spot","Options"],                rationale:"Aggressive tech and alternatives mandate; active crypto monitoring with growing allocation appetite." },
+  { firm:"Pritzker Private Capital",    city:"Chicago, IL",        type:"FO",  aum:"$3B+",              exposure:"exploring", products:["OTC Spot"],                          rationale:"Diversified alternatives mandate; AMER-based with institutional infrastructure ready for a first crypto allocation." },
+  { firm:"Tiger 21",                    city:"New York, NY",       type:"FO",  aum:"$180B (network)",   exposure:"likely",    products:["OTC Spot"],                          rationale:"UHNW peer network where 74% of family offices are now investing in or exploring crypto per BNY 2025 survey." },
 
-  // VENTURE CAPITAL (11)
-  { firm:"a16z Crypto", city:"Menlo Park, CA", type:"VC", aum:"$7.6B (crypto fund)", exposure:"confirmed", products:["OTC Spot","Options"], priority:1, rationale:"Largest dedicated crypto VC; holds large liquid BTC and ETH positions requiring OTC block execution and hedging programs." },
-  { firm:"Paradigm", city:"San Francisco, CA", type:"VC", aum:"$2.5B+", exposure:"confirmed", products:["OTC Spot","Options"], priority:1, rationale:"Top-tier crypto VC with liquid digital asset positions; co-financed $500M Tempo round in 2025; needs OTC desk for treasury management." },
-  { firm:"Haun Ventures", city:"San Francisco, CA", type:"VC", aum:"$1.5B", exposure:"confirmed", products:["OTC Spot"], priority:2, rationale:"Katie Haun's crypto-native fund with active portfolio including Chainalysis and Fireblocks; liquid positions need OTC execution." },
-  { firm:"Blockchain Capital", city:"San Francisco, CA", type:"VC", aum:"$2B+", exposure:"confirmed", products:["OTC Spot","Options"], priority:2, rationale:"Crypto specialist VC since 2013 with diversified portfolio; liquid token positions and treasury management needs." },
-  { firm:"Coinbase Ventures", city:"San Francisco, CA", type:"VC", aum:"$1B+", exposure:"confirmed", products:["OTC Spot","Market Making"], priority:2, rationale:"Corporate VC with large crypto treasury; OTC desk relationship for portfolio company token liquidity events." },
-  { firm:"Electric Capital", city:"San Francisco, CA", type:"VC", aum:"$1B+", exposure:"confirmed", products:["OTC Spot","Options"], priority:2, rationale:"Data-driven crypto VC with liquid positions; portfolio depth creates ongoing spot and options hedging demand." },
-  { firm:"Framework Ventures", city:"San Francisco, CA", type:"VC", aum:"$500M+", exposure:"confirmed", products:["OTC Spot","Market Making"], priority:2, rationale:"DeFi-native VC with token positions in liquid assets; OTC desk needed for market-neutral hedging and block exits." },
-  { firm:"Multicoin Capital (VC Fund)", city:"Austin, TX", type:"VC", aum:"$1B+", exposure:"confirmed", products:["OTC Spot","Options"], priority:2, rationale:"Runs both a hedge fund and VC fund; token warrants and liquid positions require structured OTC hedging." },
-  { firm:"Morgan Creek Digital", city:"Chapel Hill, NC", type:"VC", aum:"$500M+", exposure:"confirmed", products:["OTC Spot"], priority:3, rationale:"Mark Yusko's digital asset arm; institutional-grade access to BTC via index funds; natural OTC spot client for portfolio rebalancing." },
-  { firm:"Variant Fund", city:"New York, NY", type:"VC", aum:"$500M+", exposure:"confirmed", products:["OTC Spot","Options"], priority:3, rationale:"Web3-native VC backed by USV and Coinbase; liquid token positions and active portfolio create OTC demand." },
-  { firm:"CoinFund", city:"New York, NY", type:"VC", aum:"$300M+", exposure:"confirmed", products:["OTC Spot"], priority:3, rationale:"NY-based crypto VC with 60+ active portfolio companies; token liquidity events and portfolio exits drive OTC spot demand." },
+  // VENTURE CAPITAL
+  { firm:"a16z Crypto",                 city:"Menlo Park, CA",     type:"VC",  aum:"$7.6B",             exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"Largest dedicated crypto VC; liquid BTC and ETH positions require OTC block execution and treasury hedging programs." },
+  { firm:"Paradigm",                    city:"San Francisco, CA",  type:"VC",  aum:"$2.5B+",            exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"Top crypto VC with liquid token positions; co-financed $500M Tempo round in 2025; active treasury management needs." },
+  { firm:"Haun Ventures",               city:"San Francisco, CA",  type:"VC",  aum:"$1.5B",             exposure:"confirmed", products:["OTC Spot"],                          rationale:"Crypto-native VC; liquid positions from token events drive consistent OTC spot execution demand." },
+  { firm:"Blockchain Capital",          city:"San Francisco, CA",  type:"VC",  aum:"$2B+",              exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"Crypto specialist VC since 2013; liquid token positions require ongoing OTC spot and options execution." },
+  { firm:"Electric Capital",            city:"San Francisco, CA",  type:"VC",  aum:"$1B+",              exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"Data-driven crypto VC; portfolio depth creates consistent spot and options hedging demand across assets." },
+  { firm:"Framework Ventures",          city:"San Francisco, CA",  type:"VC",  aum:"$500M+",            exposure:"confirmed", products:["OTC Spot","Market Making"],           rationale:"DeFi-native VC with liquid token positions; OTC execution needed for market-neutral hedging and block exits." },
+  { firm:"Morgan Creek Digital",        city:"Chapel Hill, NC",    type:"VC",  aum:"$500M+",            exposure:"confirmed", products:["OTC Spot"],                          rationale:"Mark Yusko's digital asset arm; institutional BTC allocation requiring OTC spot for portfolio rebalancing." },
+  { firm:"Variant Fund",                city:"New York, NY",       type:"VC",  aum:"$500M+",            exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"NY-based Web3 VC with liquid token positions; active portfolio creates consistent OTC spot and options demand." },
+  { firm:"CoinFund",                    city:"New York, NY",       type:"VC",  aum:"$300M+",            exposure:"confirmed", products:["OTC Spot"],                          rationale:"NY-based crypto VC; token liquidity events and portfolio exits drive ongoing OTC spot execution." },
 
-  // HFT / MARKET MAKERS (10)
-  { firm:"Jump Trading", city:"Chicago, IL", type:"HFT", aum:"$20B+ ATE", exposure:"confirmed", products:["OTC Spot","Options","Market Making"], priority:1, rationale:"Major crypto HFT with Jump Crypto arm; confirmed BTC perps trading; OTC options buyer and bilateral market making counterparty." },
-  { firm:"Jane Street", city:"New York, NY", type:"HFT", aum:"$30B+ ATE", exposure:"confirmed", products:["OTC Spot","Options","Market Making"], priority:1, rationale:"Active crypto participant since 2017; institutional-grade options desk; natural bilateral OTC options counterparty at scale." },
-  { firm:"Citadel Securities", city:"New York, NY", type:"HFT", aum:"N/A (MM)", exposure:"confirmed", products:["OTC Spot","Options","Market Making"], priority:1, rationale:"Targeting 15% crypto market share; expanding OTC bilateral options activity; potential large-block spot counterparty." },
-  { firm:"Virtu Financial", city:"New York, NY", type:"HFT", aum:"N/A (MM)", exposure:"confirmed", products:["OTC Spot","Market Making"], priority:1, rationale:"Publicly listed HFT expanding into crypto; natural OTC spot desk counterparty with need for bilateral execution." },
-  { firm:"Tower Research Capital", city:"New York, NY", type:"HFT", aum:"$750M+ revenue", exposure:"confirmed", products:["OTC Spot","Market Making"], priority:2, rationale:"Major HFT with crypto arbitrage strategies; basis trading between spot and perps creates ongoing OTC block demand." },
-  { firm:"Flow Traders", city:"New York, NY", type:"HFT", aum:"N/A (MM)", exposure:"confirmed", products:["OTC Spot","Market Making"], priority:2, rationale:"Europe's largest ETF market maker with US presence; active crypto ETP market maker expanding AMER OTC activity in 2025." },
-  { firm:"IMC Trading", city:"Chicago, IL", type:"HFT", aum:"N/A (MM)", exposure:"confirmed", products:["Options","Market Making"], priority:2, rationale:"Derivatives market maker with active crypto options book; potential bilateral counterparty for structured OTC options desk." },
-  { firm:"Optiver", city:"Chicago, IL", type:"HFT", aum:"N/A (MM)", exposure:"confirmed", products:["Options","Market Making"], priority:2, rationale:"Global options market maker expanding crypto derivatives presence; bilateral options counterparty with institutional execution standards." },
-  { firm:"SIG (Susquehanna)", city:"Bala Cynwyd, PA", type:"HFT", aum:"N/A (MM)", exposure:"confirmed", products:["Options","OTC Spot","Market Making"], priority:2, rationale:"One of largest options market makers globally; active crypto options desk; natural OTC bilateral counterparty for large structured trades." },
-  { firm:"HRT (Hudson River Trading)", city:"New York, NY", type:"HFT", aum:"N/A (MM)", exposure:"likely", products:["OTC Spot","Market Making"], priority:3, rationale:"Top HFT expanding into crypto; AI-driven strategies with growing digital asset footprint; OTC spot desk engagement likely." },
+  // HFT / MARKET MAKERS
+  { firm:"Virtu Financial",             city:"New York, NY",       type:"HFT", aum:"Public (VIRT)",     exposure:"confirmed", products:["OTC Spot","Market Making"],           rationale:"Publicly listed HFT expanding crypto presence; uses bilateral OTC for large block spot that avoids exchange footprint." },
+  { firm:"Tower Research Capital",      city:"New York, NY",       type:"HFT", aum:"$750M+ revenue",    exposure:"confirmed", products:["OTC Spot","Market Making"],           rationale:"Major HFT active in crypto arb; basis trading between spot and perps creates ongoing OTC block demand." },
+  { firm:"Flow Traders",                city:"New York, NY",       type:"HFT", aum:"Public (FLOW)",     exposure:"confirmed", products:["OTC Spot","Market Making"],           rationale:"Europe's largest ETF market maker; expanding crypto ETP OTC activity in AMER market through 2025." },
+  { firm:"IMC Trading",                 city:"Chicago, IL",        type:"HFT", aum:"Private",           exposure:"confirmed", products:["Options","Market Making"],            rationale:"Global derivatives market maker with active crypto options book; bilateral counterparty for structured OTC options." },
+  { firm:"Optiver",                     city:"Chicago, IL",        type:"HFT", aum:"Private",           exposure:"confirmed", products:["Options","Market Making"],            rationale:"Global options market maker expanding crypto derivatives; institutional bilateral options counterparty." },
+  { firm:"SIG (Susquehanna)",           city:"Bala Cynwyd, PA",    type:"HFT", aum:"Private",           exposure:"confirmed", products:["Options","OTC Spot","Market Making"], rationale:"One of the largest options market makers globally with an active crypto desk; natural bilateral OTC counterparty." },
+  { firm:"HRT (Hudson River Trading)",  city:"New York, NY",       type:"HFT", aum:"~$12B revenue",     exposure:"likely",    products:["OTC Spot","Market Making"],           rationale:"Top HFT with growing digital asset footprint; AI-driven strategies expanding into crypto OTC execution." },
+  { firm:"DRW (non-Cumberland books)",  city:"Chicago, IL",        type:"HFT", aum:"Private",           exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"DRW deploys capital across strategies beyond Cumberland; non-Cumberland books may source bilateral OTC externally." },
+  { firm:"Akuna Capital",               city:"Chicago, IL",        type:"HFT", aum:"Private",           exposure:"confirmed", products:["Options","Market Making"],            rationale:"Options-focused prop firm with active crypto derivatives desk; bilateral options counterparty for structured trades." },
 ];
 
-// Render
 function renderTable(data) {
   const tbody = document.getElementById('tbody');
   tbody.innerHTML = '';
@@ -409,85 +182,57 @@ function renderTable(data) {
     const typeLabel = { HF:'Hedge Fund', FO:'Family Office', VC:'VC', HFT:'HFT / MM' }[p.type];
     const expClass  = { confirmed:'exp-confirmed', likely:'exp-likely', exploring:'exp-exploring' }[p.exposure];
     const expLabel  = { confirmed:'Confirmed', likely:'Likely', exploring:'Exploring' }[p.exposure];
-    const priClass  = `pri-${p.priority}`;
-    const priLabel  = { 1:'★ Tier 1', 2:'Tier 2', 3:'Tier 3' }[p.priority];
     const productHtml = p.products.map(pr => `<span class="ptag">${pr}</span>`).join('');
-
     const tr = document.createElement('tr');
-    tr.dataset.type     = p.type;
-    tr.dataset.priority = p.priority;
+    tr.dataset.type = p.type;
+    tr.dataset.exposure = p.exposure;
     tr.dataset.products = p.products.join(' ');
-    tr.dataset.firm     = p.firm.toLowerCase();
-
+    tr.dataset.firm = p.firm.toLowerCase();
     tr.innerHTML = `
       <td><div class="firm-name">${p.firm}</div><div class="firm-city">${p.city}</div></td>
       <td><span class="badge ${typeClass}">${typeLabel}</span></td>
-      <td style="color:#777;white-space:nowrap">${p.city.split(',')[1]?.trim() || ''}</td>
       <td class="aum">${p.aum}</td>
       <td class="${expClass}">${expLabel}</td>
       <td><div class="product-tags">${productHtml}</div></td>
-      <td class="${priClass}">${priLabel}</td>
       <td class="rationale">${p.rationale}</td>
     `;
     tbody.appendChild(tr);
   });
+  document.getElementById('count-total').textContent = data.length;
+  document.getElementById('visible-count').textContent = data.length;
 }
 
 renderTable(prospects);
 
-// Filter state
-let activeType     = 'all';
-let activePriority = 'all';
-let activeProduct  = 'all';
-let searchVal      = '';
+let activeType = 'all', activeExposure = 'all', activeProduct = 'all', searchVal = '';
 
 function applyFilters() {
   const rows = document.querySelectorAll('#tbody tr');
   let visible = 0;
   rows.forEach(row => {
-    const typeOk     = activeType     === 'all' || row.dataset.type     === activeType;
-    const priOk      = activePriority === 'all' || row.dataset.priority === activePriority;
-    const productOk  = activeProduct  === 'all' || row.dataset.products.includes(activeProduct);
-    const searchOk   = !searchVal     || row.dataset.firm.includes(searchVal.toLowerCase());
-    const show = typeOk && priOk && productOk && searchOk;
+    const show = (activeType === 'all' || row.dataset.type === activeType)
+              && (activeExposure === 'all' || row.dataset.exposure === activeExposure)
+              && (activeProduct === 'all' || row.dataset.products.includes(activeProduct))
+              && (!searchVal || row.dataset.firm.includes(searchVal.toLowerCase()));
     row.classList.toggle('hidden', !show);
     if (show) visible++;
   });
   document.getElementById('visible-count').textContent = visible;
 }
 
-// Filter buttons
-document.querySelectorAll('[data-type]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('[data-type]').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeType = btn.dataset.type;
-    applyFilters();
-  });
-});
-
-document.querySelectorAll('[data-priority]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('[data-priority]').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activePriority = btn.dataset.priority;
-    applyFilters();
-  });
-});
-
-document.querySelectorAll('[data-product]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('[data-product]').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeProduct = btn.dataset.product;
-    applyFilters();
-  });
-});
-
-document.getElementById('search').addEventListener('input', e => {
-  searchVal = e.target.value;
-  applyFilters();
-});
+document.querySelectorAll('[data-type]').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('[data-type]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); activeType = btn.dataset.type; applyFilters();
+}));
+document.querySelectorAll('[data-exposure]').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('[data-exposure]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); activeExposure = btn.dataset.exposure; applyFilters();
+}));
+document.querySelectorAll('[data-product]').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('[data-product]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); activeProduct = btn.dataset.product; applyFilters();
+}));
+document.getElementById('search').addEventListener('input', e => { searchVal = e.target.value; applyFilters(); });
 </script>
 </body>
 </html>
