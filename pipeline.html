@@ -147,12 +147,6 @@
     <button class="filter-btn" data-stage="Due Diligence">Diligence</button>
     <button class="filter-btn" data-stage="KYC">KYC</button>
     <button class="filter-btn" data-stage="Executing First Trade">First Trade</button>
-    <div class="filter-sep"></div>
-    <span class="filter-label">Profile</span>
-    <button class="filter-btn active" data-exposure="all">All</button>
-    <button class="filter-btn" data-exposure="active">Active Crypto User</button>
-    <button class="filter-btn" data-exposure="high">High Probability</button>
-    <button class="filter-btn" data-exposure="strategic">Strategic Target</button>
     <div class="search-wrap">
       <input type="text" id="search" placeholder="Search firm...">
     </div>
@@ -318,14 +312,13 @@ function renderTable(data) {
 
 renderTable(prospects);
 
-let activeType = 'all', activeExposure = 'all', activeStage = 'all', searchVal = '';
+let activeType = 'all', activeStage = 'all', searchVal = '';
 
 function applyFilters() {
   const rows = document.querySelectorAll('#tbody tr');
   let visible = 0;
   rows.forEach(row => {
     const show = (activeType === 'all' || row.dataset.type === activeType)
-              && (activeExposure === 'all' || row.dataset.exposure === activeExposure)
               && (activeStage === 'all' || row.dataset.stage === activeStage)
               && (!searchVal || row.dataset.firm.includes(searchVal.toLowerCase()));
     row.classList.toggle('hidden', !show);
@@ -337,10 +330,6 @@ function applyFilters() {
 document.querySelectorAll('button[data-type]').forEach(btn => btn.addEventListener('click', () => {
   document.querySelectorAll('button[data-type]').forEach(b => b.classList.remove('active'));
   btn.classList.add('active'); activeType = btn.dataset.type; applyFilters();
-}));
-document.querySelectorAll('button[data-exposure]').forEach(btn => btn.addEventListener('click', () => {
-  document.querySelectorAll('button[data-exposure]').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active'); activeExposure = btn.dataset.exposure; applyFilters();
 }));
 document.querySelectorAll('button[data-stage]').forEach(btn => btn.addEventListener('click', () => {
   document.querySelectorAll('button[data-stage]').forEach(b => b.classList.remove('active'));
