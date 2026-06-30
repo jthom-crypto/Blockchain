@@ -9,12 +9,12 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: #f7f7f5; color: #111; font-family: 'DM Mono', monospace; -webkit-font-smoothing: antialiased; font-size: 13px; }
-    .page { max-width: 1100px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+    .page { max-width: 1180px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
     .header { margin-bottom: 2rem; border-bottom: 0.5px solid #ddd; padding-bottom: 1.5rem; }
     .header-top { display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem; }
     .title-block h1 { font-size: 18px; font-weight: 500; letter-spacing: -0.02em; color: #111; }
     .title-block p { font-size: 12px; color: #999; margin-top: 0.2rem; }
-    .summary-stats { display: flex; gap: 2rem; margin-top: 1.2rem; }
+    .summary-stats { display: flex; gap: 2rem; margin-top: 1.2rem; flex-wrap: wrap; }
     .stat { display: flex; flex-direction: column; gap: 2px; }
     .stat-val { font-size: 22px; font-weight: 500; color: #111; letter-spacing: -0.02em; }
     .stat-label { font-size: 10px; color: #aaa; letter-spacing: 0.1em; text-transform: uppercase; }
@@ -47,12 +47,19 @@
     .badge-hft { background: #FDF4FF; color: #7E22CE; }
     .product-tags { display: flex; gap: 4px; flex-wrap: wrap; }
     .ptag { display: inline-block; padding: 1px 6px; border-radius: 2px; font-size: 10px; background: #f0f0ee; color: #555; white-space: nowrap; }
-    .exp-confirmed { color: #166534; }
-    .exp-likely    { color: #555; }
-    .exp-exploring { color: #aaa; }
+    .exp-active   { color: #166534; }
+    .exp-high     { color: #555; }
+    .exp-strategic{ color: #aaa; }
     .aum { color: #555; white-space: nowrap; }
-    .rationale { font-size: 11px; color: #888; line-height: 1.55; max-width: 240px; }
-    .footer { margin-top: 2rem; font-size: 11px; color: #bbb; }
+    .rationale { font-size: 11px; color: #888; line-height: 1.55; max-width: 230px; }
+    .opportunity { font-size: 11px; color: #555; max-width: 160px; }
+    .stage { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; white-space: nowrap; border: 0.5px solid; }
+    .stage-outreach   { color: #888; border-color: #ddd; background: #fafafa; }
+    .stage-discovery  { color: #9A3412; border-color: #FED7AA; background: #FFF7ED; }
+    .stage-diligence  { color: #4338CA; border-color: #C7D2FE; background: #EEF2FF; }
+    .stage-kyc        { color: #166534; border-color: #BBF7D0; background: #F0FDF4; }
+    .stage-firsttrade { color: #fff; border-color: #111; background: #111; }
+    .footer { margin-top: 2rem; font-size: 11px; color: #bbb; line-height: 1.6; }
   </style>
 </head>
 <body>
@@ -68,10 +75,10 @@
       </div>
     </div>
     <div class="summary-stats">
-      <div class="stat"><span class="stat-val" id="count-total">40</span><span class="stat-label">Total Prospects</span></div>
-      <div class="stat"><span class="stat-val">12</span><span class="stat-label">Hedge Funds</span></div>
+      <div class="stat"><span class="stat-val" id="count-total">44</span><span class="stat-label">Total Prospects</span></div>
+      <div class="stat"><span class="stat-val">15</span><span class="stat-label">Hedge Funds</span></div>
       <div class="stat"><span class="stat-val">10</span><span class="stat-label">Family Offices</span></div>
-      <div class="stat"><span class="stat-val">9</span><span class="stat-label">VCs</span></div>
+      <div class="stat"><span class="stat-val">10</span><span class="stat-label">VCs</span></div>
       <div class="stat"><span class="stat-val">9</span><span class="stat-label">HFTs / Market Makers</span></div>
     </div>
   </div>
@@ -84,23 +91,25 @@
     <button class="filter-btn" data-type="VC">VC</button>
     <button class="filter-btn" data-type="HFT">HFT / MM</button>
     <div class="filter-sep"></div>
-    <span class="filter-label">Product</span>
-    <button class="filter-btn active" data-product="all">All</button>
-    <button class="filter-btn" data-product="OTC Spot">OTC Spot</button>
-    <button class="filter-btn" data-product="Options">Options</button>
-    <button class="filter-btn" data-product="Market Making">Mkt Making</button>
+    <span class="filter-label">Stage</span>
+    <button class="filter-btn active" data-stage="all">All</button>
+    <button class="filter-btn" data-stage="Initial Outreach">Outreach</button>
+    <button class="filter-btn" data-stage="Discovery Call">Discovery</button>
+    <button class="filter-btn" data-stage="Due Diligence">Diligence</button>
+    <button class="filter-btn" data-stage="KYC">KYC</button>
+    <button class="filter-btn" data-stage="Executing First Trade">First Trade</button>
     <div class="filter-sep"></div>
     <span class="filter-label">Exposure</span>
     <button class="filter-btn active" data-exposure="all">All</button>
-    <button class="filter-btn" data-exposure="confirmed">Confirmed</button>
-    <button class="filter-btn" data-exposure="likely">Likely</button>
-    <button class="filter-btn" data-exposure="exploring">Exploring</button>
+    <button class="filter-btn" data-exposure="active">Active Crypto User</button>
+    <button class="filter-btn" data-exposure="high">High Probability</button>
+    <button class="filter-btn" data-exposure="strategic">Strategic Target</button>
     <div class="search-wrap">
       <input type="text" id="search" placeholder="Search firm...">
     </div>
   </div>
 
-  <div class="count-bar">Showing <span id="visible-count">40</span> of 40 prospects</div>
+  <div class="count-bar">Showing <span id="visible-count">44</span> of 44 prospects</div>
 
   <div class="table-wrap">
   <table>
@@ -109,8 +118,10 @@
         <th>Firm</th>
         <th>Type</th>
         <th>Est. AUM</th>
-        <th>Crypto Exposure</th>
+        <th>Crypto Profile</th>
+        <th>Pipeline Stage</th>
         <th>Product Fit</th>
+        <th>Opportunity</th>
         <th>Rationale</th>
       </tr>
     </thead>
@@ -119,59 +130,74 @@
   </div>
 
   <div class="footer">
-    Sources: Public disclosures, 13F filings, AIMA/PwC Crypto Hedge Fund Report 2025, Crypto Fund Research, company websites. AUM figures are estimates based on public reporting.
+    Sources: Public disclosures, 13F filings, AIMA/PwC Crypto Hedge Fund Report 2025, Crypto Fund Research, company websites. AUM figures are estimates based on public reporting. Pipeline stages are illustrative.<br>
+    Illustrative institutional prospect pipeline created for portfolio demonstration purposes.
   </div>
 </div>
 
 <script>
+const stages = ["Initial Outreach","Discovery Call","Due Diligence","KYC","Executing First Trade"];
+const stageClass = {
+  "Initial Outreach":"stage-outreach",
+  "Discovery Call":"stage-discovery",
+  "Due Diligence":"stage-diligence",
+  "KYC":"stage-kyc",
+  "Executing First Trade":"stage-firsttrade"
+};
+
 const prospects = [
   // HEDGE FUNDS
-  { firm:"Tudor Investment Corp",       city:"Greenwich, CT",      type:"HF",  aum:"$40B+",             exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"Paul Tudor Jones confirmed BTC allocation; block execution and options overlay needed for large position management." },
-  { firm:"Millennium Management",       city:"New York, NY",       type:"HF",  aum:"$70B+",             exposure:"confirmed", products:["OTC Spot","Options","Market Making"], rationale:"Confirmed BTC ETF holdings via 13F; crypto pods use multiple external OTC desks for execution quality and counterparty diversification." },
-  { firm:"Point72 Asset Management",    city:"Stamford, CT",       type:"HF",  aum:"$35B+",             exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"Confirmed stake in crypto-payments firm Alt5 Sigma; macro and systematic pods actively building digital asset exposure." },
-  { firm:"Two Sigma Investments",       city:"New York, NY",       type:"HF",  aum:"$60B+",             exposure:"likely",    products:["OTC Spot","Market Making"],           rationale:"Quant multi-strat active in crypto basis trades; external OTC desks used for large block spot at institutional scale." },
-  { firm:"Brevan Howard (BH Digital)",  city:"New York, NY",       type:"HF",  aum:"~$3B (BH Digital)", exposure:"confirmed", products:["Options","OTC Spot"],                rationale:"Dedicated crypto platform with active macro vol and options overlay strategies requiring bilateral OTC execution." },
-  { firm:"Skybridge Capital",           city:"New York, NY",       type:"HF",  aum:"$2.5B",             exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"Confirmed large BTC allocation; ongoing need for block spot execution and downside protection programs." },
-  { firm:"Rothschild Investment Corp",  city:"Chicago, IL",        type:"HF",  aum:"$1B+",              exposure:"confirmed", products:["OTC Spot"],                          rationale:"13F shows BTC ETF holdings; traditional manager building toward direct crypto allocation via OTC." },
-  { firm:"Moore Capital Management",    city:"New York, NY",       type:"HF",  aum:"$10B+",             exposure:"exploring", products:["OTC Spot","Options"],                rationale:"Global macro with commodity hedging expertise; natural candidate for BTC options as portfolio-level macro hedge." },
-  { firm:"Caxton Associates",           city:"New York, NY",       type:"HF",  aum:"$10B+",             exposure:"exploring", products:["OTC Spot","Options"],                rationale:"Global macro fund; commodity and FX vol background maps directly to BTC options strategies." },
-  { firm:"Pythagoras Investments",      city:"New York, NY",       type:"HF",  aum:"$500M+",            exposure:"confirmed", products:["OTC Spot","Market Making"],           rationale:"Best performing crypto fund over 5 and 10 years per HFJ 2025; active OTC spot buyer for arbitrage strategies." },
-  { firm:"Tephra Digital",              city:"New York, NY",       type:"HF",  aum:"$200M+",            exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"Crypto-native fund posting +9.3% in May 2025; bilateral OTC derivatives access core to their vol strategy." },
-  { firm:"ExodusPoint Capital",         city:"New York, NY",       type:"HF",  aum:"$12B+",             exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"Confirmed stake in Alt5 Sigma; multi-strat expanding crypto exposure through external OTC counterparties." },
+  { firm:"Tudor Investment Corp",       city:"Greenwich, CT",      type:"HF",  aum:"$40B+",             exposure:"active",     stage:"Due Diligence",        products:["OTC Spot","Options"],                          opportunity:"Block execution + options hedge", rationale:"Confirmed BTC allocation as a portfolio-level macro hedge; benefits from discreet block execution and structured options overlays." },
+  { firm:"Millennium Management",       city:"New York, NY",       type:"HF",  aum:"$70B+",             exposure:"active",     stage:"Initial Outreach",     products:["OTC Spot","Options","Liquidity Provision"],    opportunity:"Block execution for ETF rebalancing", rationale:"Confirmed BTC ETF holdings; multi-pod structure typically sources execution from multiple external OTC counterparties." },
+  { firm:"Point72 Asset Management",    city:"Stamford, CT",       type:"HF",  aum:"$35B+",             exposure:"high",       stage:"Initial Outreach",     products:["OTC Spot","Options"],                          opportunity:"Digital asset desk onboarding", rationale:"Multi-manager hedge fund with growing digital asset exposure and institutional infrastructure well suited for OTC execution and options solutions." },
+  { firm:"Two Sigma Investments",       city:"New York, NY",       type:"HF",  aum:"$60B+",             exposure:"high",       stage:"Discovery Call",       products:["OTC Spot","Liquidity Provision"],              opportunity:"Basis trade execution", rationale:"Quant-driven investment platform with the operational sophistication and scale to benefit from institutional OTC execution and liquidity services." },
+  { firm:"Brevan Howard (BH Digital)",  city:"New York, NY",       type:"HF",  aum:"~$3B (BH Digital)", exposure:"active",     stage:"Due Diligence",        products:["Options","OTC Spot"],                          opportunity:"Bilateral options structuring", rationale:"Dedicated crypto platform with active macro vol and options overlay strategies requiring bilateral OTC execution." },
+  { firm:"Skybridge Capital",           city:"New York, NY",       type:"HF",  aum:"$2.5B",             exposure:"active",     stage:"KYC",                  products:["OTC Spot","Options"],                          opportunity:"Treasury hedge + block spot", rationale:"Publicly confirmed BTC allocation; ongoing need for block spot execution and structured downside protection." },
+  { firm:"Rothschild Investment Corp",  city:"Chicago, IL",        type:"HF",  aum:"$1B+",              exposure:"active",     stage:"Initial Outreach",     products:["OTC Spot"],                                    opportunity:"BTC ETF-to-spot conversion", rationale:"13F filing shows BTC ETF holdings; traditional manager positioned to build toward direct crypto allocation via OTC." },
+  { firm:"Moore Capital Management",    city:"New York, NY",       type:"HF",  aum:"$10B+",             exposure:"strategic",  stage:"Initial Outreach",     products:["OTC Spot","Options"],                          opportunity:"Macro hedge overlay", rationale:"Global macro fund with deep commodity hedging expertise; a natural candidate for BTC options as a portfolio-level macro hedge." },
+  { firm:"Caxton Associates",           city:"New York, NY",       type:"HF",  aum:"$10B+",             exposure:"strategic",  stage:"Initial Outreach",     products:["OTC Spot","Options"],                          opportunity:"Vol strategy entry point", rationale:"Global macro fund whose commodity and FX vol background maps directly to BTC options strategies." },
+  { firm:"Pythagoras Investments",      city:"New York, NY",       type:"HF",  aum:"$500M+",            exposure:"active",     stage:"Executing First Trade",products:["OTC Spot","Liquidity Provision"],              opportunity:"Arbitrage execution support", rationale:"Top-performing crypto fund per Hedge Fund Journal 2025; active OTC spot buyer supporting arbitrage strategies." },
+  { firm:"Tephra Digital",              city:"New York, NY",       type:"HF",  aum:"$200M+",            exposure:"active",     stage:"Discovery Call",       products:["OTC Spot","Options"],                          opportunity:"Vol strategy options access", rationale:"Crypto-native fund with an active volatility strategy; bilateral OTC derivatives access is core to their mandate." },
+  { firm:"ExodusPoint Capital",         city:"New York, NY",       type:"HF",  aum:"$12B+",             exposure:"high",       stage:"Initial Outreach",     products:["OTC Spot","Options"],                          opportunity:"Multi-strat digital asset desk", rationale:"Multi-manager hedge fund with growing digital asset exposure and institutional infrastructure well suited for OTC execution and options solutions." },
+  { firm:"Balyasny Asset Management",   city:"Chicago, IL",        type:"HF",  aum:"$6B+",              exposure:"strategic",  stage:"Initial Outreach",     products:["OTC Spot","Options"],                          opportunity:"Diversification into digital assets", rationale:"Multi-strategy platform diversifying into commodities, macro, and early-stage technology; institutional scale fits OTC execution needs." },
+  { firm:"Schonfeld Strategic Advisors",city:"New York, NY",       type:"HF",  aum:"$13B+",             exposure:"strategic",  stage:"Initial Outreach",     products:["OTC Spot","Options"],                          opportunity:"Quant pod digital asset access", rationale:"Quantitative multi-strategy platform with the technology and risk infrastructure to support a digital asset trading pod." },
+  { firm:"Qube Research & Technologies",city:"New York, NY",       type:"HF",  aum:"$38B+",             exposure:"strategic",  stage:"Initial Outreach",     products:["OTC Spot","Liquidity Provision"],              opportunity:"Quant strategy expansion", rationale:"Top-tier global quant fund with rapid AUM growth; institutional scale and infrastructure suited for OTC execution as crypto strategies mature." },
 
   // FAMILY OFFICES
-  { firm:"Iconiq Capital",              city:"San Francisco, CA",  type:"FO",  aum:"$80B+",             exposure:"likely",    products:["OTC Spot","Options"],                rationale:"Multi-family office for major tech founders; large alternatives mandate with strong digital asset awareness." },
-  { firm:"Founders Fund",               city:"San Francisco, CA",  type:"FO",  aum:"$12B+",             exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"Peter Thiel confirmed early Bitcoin holder; large-scale BTC positions need discreet block OTC execution." },
-  { firm:"Winklevoss Family Office",    city:"New York, NY",       type:"FO",  aum:"$1B+",              exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"Deep BTC and ETH conviction; natural buyer of structured OTC options for treasury management." },
-  { firm:"Euclidean Capital",           city:"New York, NY",       type:"FO",  aum:"$3B+",              exposure:"likely",    products:["OTC Spot","Options"],                rationale:"Jim Simons family office; quant orientation maps well to systematic digital asset strategies and options overlays." },
-  { firm:"Emerson Collective",          city:"Palo Alto, CA",      type:"FO",  aum:"$5B+",              exposure:"likely",    products:["OTC Spot"],                          rationale:"Tech-forward alternatives mandate with consistent digital asset exploration." },
-  { firm:"Bezos Expeditions",           city:"Seattle, WA",        type:"FO",  aum:"$10B+",             exposure:"exploring", products:["OTC Spot","Options"],                rationale:"Large AUM with venture and alternatives focus; structured OTC entry well suited to their mandate and scale." },
-  { firm:"Valor Equity Partners",       city:"Chicago, IL",        type:"FO",  aum:"$2B+",              exposure:"likely",    products:["OTC Spot"],                          rationale:"Tech-concentrated portfolio exploring crypto as a diversifier; AMER-based institutional onboarding ready." },
-  { firm:"Thrive Capital",              city:"New York, NY",       type:"FO",  aum:"$5B+",              exposure:"likely",    products:["OTC Spot","Options"],                rationale:"Aggressive tech and alternatives mandate; active crypto monitoring with growing allocation appetite." },
-  { firm:"Pritzker Private Capital",    city:"Chicago, IL",        type:"FO",  aum:"$3B+",              exposure:"exploring", products:["OTC Spot"],                          rationale:"Diversified alternatives mandate; AMER-based with institutional infrastructure ready for a first crypto allocation." },
-  { firm:"Tiger 21",                    city:"New York, NY",       type:"FO",  aum:"$180B (network)",   exposure:"likely",    products:["OTC Spot"],                          rationale:"UHNW peer network where 74% of family offices are now investing in or exploring crypto per BNY 2025 survey." },
+  { firm:"Iconiq Capital",              city:"San Francisco, CA",  type:"FO",  aum:"$80B+",             exposure:"high",       stage:"Discovery Call",       products:["Treasury Solutions","Options Overlay"],        opportunity:"Family office BTC allocation", rationale:"Multi-family office for major tech founders; large alternatives mandate with strong digital asset awareness." },
+  { firm:"Founders Fund",               city:"San Francisco, CA",  type:"FO",  aum:"$12B+",             exposure:"active",     stage:"KYC",                  products:["OTC Spot","Options"],                          opportunity:"Block execution, BTC treasury", rationale:"Early Bitcoin holder with large-scale BTC positions that benefit from discreet block OTC execution." },
+  { firm:"Winklevoss Family Office",    city:"New York, NY",       type:"FO",  aum:"$1B+",              exposure:"active",     stage:"Due Diligence",        products:["OTC Spot","Options"],                          opportunity:"Treasury options structuring", rationale:"Deep BTC and ETH conviction; a natural buyer of structured OTC options for treasury management." },
+  { firm:"Euclidean Capital",           city:"New York, NY",       type:"FO",  aum:"$3B+",              exposure:"high",       stage:"Initial Outreach",     products:["OTC Spot","Options Overlay"],                  opportunity:"Systematic digital asset strategy", rationale:"Quant-oriented family office with an appetite for systematic digital asset strategies and options overlays." },
+  { firm:"Emerson Collective",          city:"Palo Alto, CA",      type:"FO",  aum:"$5B+",              exposure:"high",       stage:"Initial Outreach",     products:["Treasury Solutions"],                          opportunity:"Initial BTC allocation", rationale:"Tech-forward alternatives mandate with consistent digital asset exploration." },
+  { firm:"Bezos Expeditions",           city:"Seattle, WA",        type:"FO",  aum:"$10B+",             exposure:"strategic",  stage:"Initial Outreach",     products:["OTC Spot","Treasury Solutions"],               opportunity:"Structured treasury entry", rationale:"Large AUM with venture and alternatives focus; well suited to a structured OTC entry given scale." },
+  { firm:"Valor Equity Partners",       city:"Chicago, IL",        type:"FO",  aum:"$2B+",              exposure:"high",       stage:"Initial Outreach",     products:["OTC Spot"],                                    opportunity:"Portfolio diversification", rationale:"Tech-concentrated portfolio exploring crypto as a diversifier; AMER-based and onboarding-ready." },
+  { firm:"Thrive Capital",              city:"New York, NY",       type:"FO",  aum:"$5B+",              exposure:"high",       stage:"Discovery Call",       products:["OTC Spot","Options Overlay"],                  opportunity:"Tech-adjacent treasury allocation", rationale:"Aggressive tech and alternatives mandate with active crypto monitoring and growing allocation appetite." },
+  { firm:"Pritzker Private Capital",    city:"Chicago, IL",        type:"FO",  aum:"$3B+",              exposure:"strategic",  stage:"Initial Outreach",     products:["OTC Spot"],                                    opportunity:"First crypto allocation", rationale:"Diversified alternatives mandate with institutional infrastructure ready for a first crypto allocation." },
+  { firm:"Tiger 21",                    city:"New York, NY",       type:"FO",  aum:"$180B (network)",   exposure:"high",       stage:"Initial Outreach",     products:["Treasury Solutions","Custody"],                opportunity:"UHNW member BTC allocation", rationale:"UHNW peer network in which a majority of family offices are now investing in or exploring crypto per BNY 2025 survey." },
 
   // VENTURE CAPITAL
-  { firm:"a16z Crypto",                 city:"Menlo Park, CA",     type:"VC",  aum:"$7.6B",             exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"Largest dedicated crypto VC; liquid BTC and ETH positions require OTC block execution and treasury hedging programs." },
-  { firm:"Paradigm",                    city:"San Francisco, CA",  type:"VC",  aum:"$2.5B+",            exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"Top crypto VC with liquid token positions; co-financed $500M Tempo round in 2025; active treasury management needs." },
-  { firm:"Haun Ventures",               city:"San Francisco, CA",  type:"VC",  aum:"$1.5B",             exposure:"confirmed", products:["OTC Spot"],                          rationale:"Crypto-native VC; liquid positions from token events drive consistent OTC spot execution demand." },
-  { firm:"Blockchain Capital",          city:"San Francisco, CA",  type:"VC",  aum:"$2B+",              exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"Crypto specialist VC since 2013; liquid token positions require ongoing OTC spot and options execution." },
-  { firm:"Electric Capital",            city:"San Francisco, CA",  type:"VC",  aum:"$1B+",              exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"Data-driven crypto VC; portfolio depth creates consistent spot and options hedging demand across assets." },
-  { firm:"Framework Ventures",          city:"San Francisco, CA",  type:"VC",  aum:"$500M+",            exposure:"confirmed", products:["OTC Spot","Market Making"],           rationale:"DeFi-native VC with liquid token positions; OTC execution needed for market-neutral hedging and block exits." },
-  { firm:"Morgan Creek Digital",        city:"Chapel Hill, NC",    type:"VC",  aum:"$500M+",            exposure:"confirmed", products:["OTC Spot"],                          rationale:"Mark Yusko's digital asset arm; institutional BTC allocation requiring OTC spot for portfolio rebalancing." },
-  { firm:"Variant Fund",                city:"New York, NY",       type:"VC",  aum:"$500M+",            exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"NY-based Web3 VC with liquid token positions; active portfolio creates consistent OTC spot and options demand." },
-  { firm:"CoinFund",                    city:"New York, NY",       type:"VC",  aum:"$300M+",            exposure:"confirmed", products:["OTC Spot"],                          rationale:"NY-based crypto VC; token liquidity events and portfolio exits drive ongoing OTC spot execution." },
+  { firm:"a16z Crypto",                 city:"Menlo Park, CA",     type:"VC",  aum:"$7.6B",             exposure:"active",     stage:"Discovery Call",       products:["OTC Spot","Options"],                          opportunity:"Treasury hedging", rationale:"Largest dedicated crypto VC; liquid BTC and ETH positions require OTC block execution and treasury hedging programs." },
+  { firm:"Paradigm",                    city:"San Francisco, CA",  type:"VC",  aum:"$2.5B+",            exposure:"active",     stage:"Initial Outreach",     products:["OTC Spot","Options"],                          opportunity:"Treasury hedging", rationale:"Top-tier crypto VC with liquid token positions and active treasury management needs." },
+  { firm:"Haun Ventures",               city:"San Francisco, CA",  type:"VC",  aum:"$1.5B",             exposure:"active",     stage:"Initial Outreach",     products:["OTC Spot"],                                    opportunity:"Token liquidity events", rationale:"Crypto-native VC whose liquid positions from token events drive consistent OTC spot execution demand." },
+  { firm:"Blockchain Capital",          city:"San Francisco, CA",  type:"VC",  aum:"$2B+",              exposure:"active",     stage:"Initial Outreach",     products:["OTC Spot","Options"],                          opportunity:"Liquid position management", rationale:"Crypto specialist VC since 2013 with liquid token positions requiring ongoing OTC spot and options execution." },
+  { firm:"Electric Capital",            city:"San Francisco, CA",  type:"VC",  aum:"$1B+",              exposure:"active",     stage:"Discovery Call",       products:["OTC Spot","Options"],                          opportunity:"Portfolio hedging", rationale:"Data-driven crypto VC whose portfolio depth creates consistent spot and options hedging demand across assets." },
+  { firm:"Framework Ventures",          city:"San Francisco, CA",  type:"VC",  aum:"$500M+",            exposure:"active",     stage:"Due Diligence",        products:["Liquidity Provision","OTC Spot"],              opportunity:"Token liquidity", rationale:"DeFi-native VC with liquid token positions; OTC execution supports market-neutral hedging and block exits." },
+  { firm:"Morgan Creek Digital",        city:"Chapel Hill, NC",    type:"VC",  aum:"$500M+",            exposure:"active",     stage:"Initial Outreach",     products:["OTC Spot"],                                    opportunity:"Portfolio rebalancing", rationale:"Institutional BTC allocation requiring OTC spot for ongoing portfolio rebalancing." },
+  { firm:"Variant Fund",                city:"New York, NY",       type:"VC",  aum:"$500M+",            exposure:"active",     stage:"Initial Outreach",     products:["OTC Spot","Options"],                          opportunity:"Active portfolio support", rationale:"NY-based Web3 VC with liquid token positions and an active portfolio creating consistent OTC demand." },
+  { firm:"CoinFund",                    city:"New York, NY",       type:"VC",  aum:"$300M+",            exposure:"active",     stage:"Initial Outreach",     products:["OTC Spot"],                                    opportunity:"Liquidity event support", rationale:"NY-based crypto VC; token liquidity events and portfolio exits drive ongoing OTC spot execution." },
+  { firm:"Polychain Capital",           city:"San Francisco, CA",  type:"VC",  aum:"$1B+",              exposure:"active",     stage:"Initial Outreach",     products:["OTC Spot","Liquidity Provision"],              opportunity:"Liquid token management", rationale:"Established crypto-native fund manager with significant liquid token holdings requiring active OTC management." },
+  { firm:"Multicoin Capital",           city:"Austin, TX",         type:"VC",  aum:"$1B+",              exposure:"active",     stage:"Discovery Call",       products:["OTC Spot","Options"],                          opportunity:"Liquid + venture book hedging", rationale:"Runs both liquid and venture strategies; token positions and warrants benefit from structured OTC hedging." },
 
   // HFT / MARKET MAKERS
-  { firm:"Virtu Financial",             city:"New York, NY",       type:"HFT", aum:"Public (VIRT)",     exposure:"confirmed", products:["OTC Spot","Market Making"],           rationale:"Publicly listed HFT expanding crypto presence; uses bilateral OTC for large block spot that avoids exchange footprint." },
-  { firm:"Tower Research Capital",      city:"New York, NY",       type:"HFT", aum:"$750M+ revenue",    exposure:"confirmed", products:["OTC Spot","Market Making"],           rationale:"Major HFT active in crypto arb; basis trading between spot and perps creates ongoing OTC block demand." },
-  { firm:"Flow Traders",                city:"New York, NY",       type:"HFT", aum:"Public (FLOW)",     exposure:"confirmed", products:["OTC Spot","Market Making"],           rationale:"Europe's largest ETF market maker; expanding crypto ETP OTC activity in AMER market through 2025." },
-  { firm:"IMC Trading",                 city:"Chicago, IL",        type:"HFT", aum:"Private",           exposure:"confirmed", products:["Options","Market Making"],            rationale:"Global derivatives market maker with active crypto options book; bilateral counterparty for structured OTC options." },
-  { firm:"Optiver",                     city:"Chicago, IL",        type:"HFT", aum:"Private",           exposure:"confirmed", products:["Options","Market Making"],            rationale:"Global options market maker expanding crypto derivatives; institutional bilateral options counterparty." },
-  { firm:"SIG (Susquehanna)",           city:"Bala Cynwyd, PA",    type:"HFT", aum:"Private",           exposure:"confirmed", products:["Options","OTC Spot","Market Making"], rationale:"One of the largest options market makers globally with an active crypto desk; natural bilateral OTC counterparty." },
-  { firm:"HRT (Hudson River Trading)",  city:"New York, NY",       type:"HFT", aum:"~$12B revenue",     exposure:"likely",    products:["OTC Spot","Market Making"],           rationale:"Top HFT with growing digital asset footprint; AI-driven strategies expanding into crypto OTC execution." },
-  { firm:"DRW (non-Cumberland books)",  city:"Chicago, IL",        type:"HFT", aum:"Private",           exposure:"confirmed", products:["OTC Spot","Options"],                rationale:"DRW deploys capital across strategies beyond Cumberland; non-Cumberland books may source bilateral OTC externally." },
-  { firm:"Akuna Capital",               city:"Chicago, IL",        type:"HFT", aum:"Private",           exposure:"confirmed", products:["Options","Market Making"],            rationale:"Options-focused prop firm with active crypto derivatives desk; bilateral options counterparty for structured trades." },
+  { firm:"Virtu Financial",             city:"New York, NY",       type:"HFT", aum:"Public (VIRT)",     exposure:"active",     stage:"Initial Outreach",     products:["OTC Spot","Liquidity Provision"],              opportunity:"Block execution off-exchange", rationale:"Publicly listed HFT expanding crypto presence; uses bilateral OTC for block spot that avoids exchange footprint." },
+  { firm:"Tower Research Capital",      city:"New York, NY",       type:"HFT", aum:"$750M+ revenue",    exposure:"active",     stage:"Discovery Call",       products:["OTC Spot","Liquidity Provision"],              opportunity:"Basis trade execution", rationale:"Active in crypto arbitrage; basis trading between spot and perps creates ongoing OTC block demand." },
+  { firm:"Flow Traders",                city:"New York, NY",       type:"HFT", aum:"Public (FLOW)",     exposure:"active",     stage:"Initial Outreach",     products:["OTC Spot","Liquidity Provision"],              opportunity:"Crypto ETP market making support", rationale:"Europe's largest ETF market maker with an active US presence and expanding crypto ETP OTC activity." },
+  { firm:"IMC Trading",                 city:"Chicago, IL",        type:"HFT", aum:"Private",           exposure:"active",     stage:"Initial Outreach",     products:["Options","Liquidity Provision"],               opportunity:"Bilateral options counterparty", rationale:"Global derivatives market maker with an active crypto options book and bilateral OTC counterparty needs." },
+  { firm:"Optiver",                     city:"Chicago, IL",        type:"HFT", aum:"Private",           exposure:"active",     stage:"Initial Outreach",     products:["Options","Liquidity Provision"],               opportunity:"Bilateral options counterparty", rationale:"Global options market maker expanding crypto derivatives with institutional bilateral options needs." },
+  { firm:"SIG (Susquehanna)",           city:"Bala Cynwyd, PA",    type:"HFT", aum:"Private",           exposure:"active",     stage:"Discovery Call",       products:["Options","OTC Spot","Liquidity Provision"],    opportunity:"Structured options counterparty", rationale:"One of the largest options market makers globally with an active crypto desk and bilateral OTC needs." },
+  { firm:"HRT (Hudson River Trading)",  city:"New York, NY",       type:"HFT", aum:"~$12B revenue",     exposure:"high",       stage:"Initial Outreach",     products:["OTC Spot","Liquidity Provision"],              opportunity:"Digital asset OTC entry", rationale:"Top HFT with a growing digital asset footprint and AI-driven strategies expanding into crypto OTC execution." },
+  { firm:"Akuna Capital",               city:"Chicago, IL",        type:"HFT", aum:"Private",           exposure:"active",     stage:"Initial Outreach",     products:["Options","Liquidity Provision"],               opportunity:"Structured options counterparty", rationale:"Options-focused prop firm with an active crypto derivatives desk and bilateral OTC counterparty needs." },
+  { firm:"XTX Markets",                 city:"New York, NY",       type:"HFT", aum:"Private",           exposure:"active",     stage:"Initial Outreach",     products:["OTC Spot","Liquidity Provision"],              opportunity:"Cross-asset liquidity expansion", rationale:"Global market maker providing liquidity across crypto, equities, and FX; bilateral OTC fits cross-asset model." },
 ];
 
 function renderTable(data) {
@@ -180,12 +206,14 @@ function renderTable(data) {
   data.forEach(p => {
     const typeClass = { HF:'badge-hf', FO:'badge-fo', VC:'badge-vc', HFT:'badge-hft' }[p.type];
     const typeLabel = { HF:'Hedge Fund', FO:'Family Office', VC:'VC', HFT:'HFT / MM' }[p.type];
-    const expClass  = { confirmed:'exp-confirmed', likely:'exp-likely', exploring:'exp-exploring' }[p.exposure];
-    const expLabel  = { confirmed:'Confirmed', likely:'Likely', exploring:'Exploring' }[p.exposure];
+    const expClass  = { active:'exp-active', high:'exp-high', strategic:'exp-strategic' }[p.exposure];
+    const expLabel  = { active:'Active Crypto User', high:'High Probability', strategic:'Strategic Target' }[p.exposure];
     const productHtml = p.products.map(pr => `<span class="ptag">${pr}</span>`).join('');
+    const stCls = stageClass[p.stage];
     const tr = document.createElement('tr');
     tr.dataset.type = p.type;
     tr.dataset.exposure = p.exposure;
+    tr.dataset.stage = p.stage;
     tr.dataset.products = p.products.join(' ');
     tr.dataset.firm = p.firm.toLowerCase();
     tr.innerHTML = `
@@ -193,7 +221,9 @@ function renderTable(data) {
       <td><span class="badge ${typeClass}">${typeLabel}</span></td>
       <td class="aum">${p.aum}</td>
       <td class="${expClass}">${expLabel}</td>
+      <td><span class="stage ${stCls}">${p.stage}</span></td>
       <td><div class="product-tags">${productHtml}</div></td>
+      <td class="opportunity">${p.opportunity}</td>
       <td class="rationale">${p.rationale}</td>
     `;
     tbody.appendChild(tr);
@@ -204,7 +234,7 @@ function renderTable(data) {
 
 renderTable(prospects);
 
-let activeType = 'all', activeExposure = 'all', activeProduct = 'all', searchVal = '';
+let activeType = 'all', activeExposure = 'all', activeStage = 'all', searchVal = '';
 
 function applyFilters() {
   const rows = document.querySelectorAll('#tbody tr');
@@ -212,7 +242,7 @@ function applyFilters() {
   rows.forEach(row => {
     const show = (activeType === 'all' || row.dataset.type === activeType)
               && (activeExposure === 'all' || row.dataset.exposure === activeExposure)
-              && (activeProduct === 'all' || row.dataset.products.includes(activeProduct))
+              && (activeStage === 'all' || row.dataset.stage === activeStage)
               && (!searchVal || row.dataset.firm.includes(searchVal.toLowerCase()));
     row.classList.toggle('hidden', !show);
     if (show) visible++;
@@ -228,9 +258,9 @@ document.querySelectorAll('[data-exposure]').forEach(btn => btn.addEventListener
   document.querySelectorAll('[data-exposure]').forEach(b => b.classList.remove('active'));
   btn.classList.add('active'); activeExposure = btn.dataset.exposure; applyFilters();
 }));
-document.querySelectorAll('[data-product]').forEach(btn => btn.addEventListener('click', () => {
-  document.querySelectorAll('[data-product]').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active'); activeProduct = btn.dataset.product; applyFilters();
+document.querySelectorAll('[data-stage]').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('[data-stage]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); activeStage = btn.dataset.stage; applyFilters();
 }));
 document.getElementById('search').addEventListener('input', e => { searchVal = e.target.value; applyFilters(); });
 </script>
