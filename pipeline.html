@@ -9,7 +9,7 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: #f7f7f5; color: #111; font-family: 'DM Mono', monospace; -webkit-font-smoothing: antialiased; font-size: 13px; }
-    .page { max-width: 100%; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+    .page { max-width: 1320px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
     .header { margin-bottom: 2rem; border-bottom: 0.5px solid #ddd; padding-bottom: 1.5rem; }
     .header-top { display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem; }
     .title-block h1 { font-size: 18px; font-weight: 500; letter-spacing: -0.02em; color: #111; }
@@ -30,23 +30,23 @@
     .search-wrap input::placeholder { color: #bbb; }
     .count-bar { font-size: 11px; color: #aaa; margin-bottom: 0.6rem; }
     .count-bar span { color: #111; font-weight: 500; }
-    .table-wrap { overflow-x: auto; }
-    table { width: 100%; table-layout: fixed; border-collapse: collapse; background: #fff; border: 0.5px solid #e5e5e5; border-radius: 4px; overflow: hidden; }
-    col.col-firm    { width: 160px; }
-    col.col-type    { width: 100px; }
-    col.col-aum     { width: 110px; }
-    col.col-profile { width: 120px; }
-    col.col-stage   { width: 120px; }
-    col.col-product { width: 200px; }
-    col.col-opp     { width: 170px; }
-    col.col-rat     { width: auto; }
+    .table-wrap { overflow-x: auto; max-width: 100%; border-radius: 4px; }
+    table { width: 100%; min-width: 1280px; table-layout: fixed; border-collapse: collapse; background: #fff; border: 0.5px solid #e5e5e5; border-radius: 4px; }
+    col.col-firm    { width: 175px; }
+    col.col-type    { width: 95px; }
+    col.col-aum     { width: 100px; }
+    col.col-profile { width: 110px; }
+    col.col-stage   { width: 115px; }
+    col.col-product { width: 195px; }
+    col.col-opp     { width: 160px; }
+    col.col-rat     { width: 330px; }
     thead th { background: #f7f7f5; border-bottom: 0.5px solid #e5e5e5; padding: 8px 12px; text-align: left; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #aaa; font-weight: 400; white-space: nowrap; }
     tbody tr { border-bottom: 0.5px solid #f0f0f0; transition: background 0.08s; }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: #fafaf8; }
     tbody tr.hidden { display: none; }
     td { padding: 9px 12px; vertical-align: middle; line-height: 1.45; }
-    .firm-name { font-weight: 500; color: #111; font-size: 13px; white-space: nowrap; }
+    .firm-name { font-weight: 500; color: #111; font-size: 13px; line-height: 1.3; }
     .firm-city { font-size: 11px; color: #aaa; }
     .badge { display: inline-block; padding: 2px 7px; border-radius: 2px; font-size: 10px; letter-spacing: 0.06em; white-space: nowrap; }
     .badge-hf  { background: #EEF2FF; color: #4338CA; }
@@ -169,7 +169,7 @@ const prospects = [
   { firm:"Millennium Management",       city:"New York, NY",       type:"HF",  aum:"$70B+",             exposure:"active",     stage:"Initial Outreach",     products:["OTC Spot","Options","Liquidity Provision"],    opportunity:"Block execution for ETF rebalancing", rationale:"Confirmed BTC ETF holdings; multi-pod structure typically sources execution from multiple external OTC counterparties." },
   { firm:"Point72 Asset Management",    city:"Stamford, CT",       type:"HF",  aum:"$35B+",             exposure:"high",       stage:"Initial Outreach",     products:["OTC Spot","Options"],                          opportunity:"Digital asset desk onboarding", rationale:"Multi-manager hedge fund with growing digital asset exposure and institutional infrastructure well suited for OTC execution and options solutions." },
   { firm:"Two Sigma Investments",       city:"New York, NY",       type:"HF",  aum:"$60B+",             exposure:"high",       stage:"Discovery Call",       products:["OTC Spot","Liquidity Provision"],              opportunity:"Basis trade execution", rationale:"Quant-driven investment platform with the operational sophistication and scale to benefit from institutional OTC execution and liquidity services." },
-  { firm:"Brevan Howard (BH Digital)",  city:"New York, NY",       type:"HF",  aum:"~$3B (BH Digital)", exposure:"active",     stage:"Due Diligence",        products:["Options","OTC Spot"],                          opportunity:"Bilateral options structuring", rationale:"Dedicated crypto platform with active macro vol and options overlay strategies requiring bilateral OTC execution." },
+  { firm:"Brevan Howard",  city:"New York, NY",       type:"HF",  aum:"~$3B (BH Digital)", exposure:"active",     stage:"Due Diligence",        products:["Options","OTC Spot"],                          opportunity:"Bilateral options structuring", rationale:"Dedicated crypto platform with active macro vol and options overlay strategies requiring bilateral OTC execution." },
   { firm:"Skybridge Capital",           city:"New York, NY",       type:"HF",  aum:"$2.5B",             exposure:"active",     stage:"KYC",                  products:["OTC Spot","Options"],                          opportunity:"Treasury hedge + block spot", rationale:"Publicly confirmed BTC allocation; ongoing need for block spot execution and structured downside protection." },
   { firm:"Rothschild Investment Corp",  city:"Chicago, IL",        type:"HF",  aum:"$1B+",              exposure:"active",     stage:"Initial Outreach",     products:["OTC Spot"],                                    opportunity:"BTC ETF-to-spot conversion", rationale:"13F filing shows BTC ETF holdings; traditional manager positioned to build toward direct crypto allocation via OTC." },
   { firm:"Moore Capital Management",    city:"New York, NY",       type:"HF",  aum:"$10B+",             exposure:"strategic",  stage:"Initial Outreach",     products:["OTC Spot","Options"],                          opportunity:"Macro hedge overlay", rationale:"Global macro fund with deep commodity hedging expertise; a natural candidate for BTC options as a portfolio-level macro hedge." },
