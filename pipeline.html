@@ -152,7 +152,7 @@
     </div>
   </div>
 
-  <div class="count-bar">Showing <span id="visible-count">44</span> of 44 prospects &nbsp;·&nbsp; click the ⓘ next to a firm for scale &amp; full rationale</div>
+  <div class="count-bar">Showing <span id="visible-count">43</span> of <span id="total-count">43</span> prospects &nbsp;·&nbsp; click the ⓘ next to a firm for scale &amp; full rationale</div>
 
   <div class="table-wrap">
   <table>
@@ -293,6 +293,7 @@ function renderTable(data) {
     tbody.appendChild(tr);
   });
   document.getElementById('count-total').textContent = data.length;
+  document.getElementById('total-count').textContent = data.length;
   document.getElementById('visible-count').textContent = data.length;
 
   // Tooltip toggle logic
