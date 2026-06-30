@@ -201,6 +201,11 @@ const stageClass = {
   "Executing First Trade":"stage-firsttrade"
 };
 
+function stageLabel(s) {
+  if (s === "Executing First Trade") return "First Trade";
+  return s;
+}
+
 const prospects = [
   // HEDGE FUNDS
   { firm:"Tudor Investment Corp", city:"Greenwich, CT", type:"HF", scale:"$40B+", exposure:"active", stage:"Due Diligence", need:"Macro BTC hedge", products:["OTC Spot","Options"], action:"Present collar structure for Q3 rebalance", rationale:"Confirmed BTC allocation used as a portfolio-level macro hedge; benefits from discreet block execution and structured options overlays." },
@@ -286,7 +291,7 @@ function renderTable(data) {
       </td>
       <td><span class="badge ${typeClass}">${typeLabel}</span></td>
       <td class="${expClass}">${expLabel}</td>
-      <td><span class="stage ${stCls}">${p.stage}</span></td>
+      <td><span class="stage ${stCls}">${stageLabel(p.stage)}</span></td>
       <td class="need">${p.need}</td>
       <td><div class="product-tags">${productHtml}</div></td>
       <td class="action">${p.action}</td>
