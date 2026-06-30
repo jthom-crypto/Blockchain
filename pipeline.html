@@ -9,7 +9,7 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: #f7f7f5; color: #111; font-family: 'DM Mono', monospace; -webkit-font-smoothing: antialiased; font-size: 13px; }
-    .page { max-width: 1320px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+    .page { max-width: 1800px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
     .header { margin-bottom: 2rem; border-bottom: 0.5px solid #ddd; padding-bottom: 1.5rem; }
     .header-top { display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem; }
     .title-block h1 { font-size: 18px; font-weight: 500; letter-spacing: -0.02em; color: #111; }
@@ -31,15 +31,15 @@
     .count-bar { font-size: 11px; color: #aaa; margin-bottom: 0.6rem; }
     .count-bar span { color: #111; font-weight: 500; }
     .table-wrap { overflow-x: auto; max-width: 100%; border-radius: 4px; }
-    table { width: 100%; min-width: 1280px; table-layout: fixed; border-collapse: collapse; background: #fff; border: 0.5px solid #e5e5e5; border-radius: 4px; }
-    col.col-firm    { width: 175px; }
-    col.col-type    { width: 95px; }
-    col.col-aum     { width: 100px; }
-    col.col-profile { width: 110px; }
-    col.col-stage   { width: 115px; }
-    col.col-product { width: 195px; }
-    col.col-opp     { width: 160px; }
-    col.col-rat     { width: 330px; }
+    table { width: 100%; min-width: 1680px; table-layout: fixed; border-collapse: collapse; background: #fff; border: 0.5px solid #e5e5e5; border-radius: 4px; }
+    col.col-firm    { width: 190px; }
+    col.col-type    { width: 105px; }
+    col.col-aum     { width: 115px; }
+    col.col-profile { width: 125px; }
+    col.col-stage   { width: 165px; }
+    col.col-product { width: 230px; }
+    col.col-opp     { width: 200px; }
+    col.col-rat     { width: 550px; }
     thead th { background: #f7f7f5; border-bottom: 0.5px solid #e5e5e5; padding: 8px 12px; text-align: left; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #aaa; font-weight: 400; white-space: nowrap; }
     tbody tr { border-bottom: 0.5px solid #f0f0f0; transition: background 0.08s; }
     tbody tr:last-child { border-bottom: none; }
@@ -61,7 +61,7 @@
     .aum { color: #555; white-space: nowrap; }
     .rationale { font-size: 11px; color: #888; line-height: 1.5; }
     .opportunity { font-size: 11px; color: #555; line-height: 1.5; }
-    .stage { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; white-space: nowrap; border: 0.5px solid; }
+    .stage { display: block; width: fit-content; max-width: 100%; padding: 3px 9px; border-radius: 10px; font-size: 10px; white-space: nowrap; border: 0.5px solid; overflow: hidden; text-overflow: ellipsis; }
     .stage-outreach   { color: #888; border-color: #ddd; background: #fafafa; }
     .stage-discovery  { color: #9A3412; border-color: #FED7AA; background: #FFF7ED; }
     .stage-diligence  { color: #4338CA; border-color: #C7D2FE; background: #EEF2FF; }
