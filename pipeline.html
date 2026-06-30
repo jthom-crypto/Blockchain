@@ -330,16 +330,16 @@ function applyFilters() {
   document.getElementById('visible-count').textContent = visible;
 }
 
-document.querySelectorAll('[data-type]').forEach(btn => btn.addEventListener('click', () => {
-  document.querySelectorAll('[data-type]').forEach(b => b.classList.remove('active'));
+document.querySelectorAll('button[data-type]').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('button[data-type]').forEach(b => b.classList.remove('active'));
   btn.classList.add('active'); activeType = btn.dataset.type; applyFilters();
 }));
-document.querySelectorAll('[data-exposure]').forEach(btn => btn.addEventListener('click', () => {
-  document.querySelectorAll('[data-exposure]').forEach(b => b.classList.remove('active'));
+document.querySelectorAll('button[data-exposure]').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('button[data-exposure]').forEach(b => b.classList.remove('active'));
   btn.classList.add('active'); activeExposure = btn.dataset.exposure; applyFilters();
 }));
-document.querySelectorAll('[data-stage]').forEach(btn => btn.addEventListener('click', () => {
-  document.querySelectorAll('[data-stage]').forEach(b => b.classList.remove('active'));
+document.querySelectorAll('button[data-stage]').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('button[data-stage]').forEach(b => b.classList.remove('active'));
   btn.classList.add('active'); activeStage = btn.dataset.stage; applyFilters();
 }));
 document.getElementById('search').addEventListener('input', e => { searchVal = e.target.value; applyFilters(); });
