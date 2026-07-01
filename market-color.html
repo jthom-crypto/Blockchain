@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Institutional Market Color — Blockchain.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0D1117; color: #E6EDF3; font-family: 'DM Mono', monospace; -webkit-font-smoothing: antialiased; font-size: 13px; }
+
+    .page { max-width: 1100px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+
+    /* Header */
+    .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 0.5px solid #21262D; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .header-text h1 { font-size: 16px; font-weight: 500; color: #E6EDF3; letter-spacing: -0.01em; }
+    .header-text p { font-size: 11px; color: #8B949E; margin-top: 3px; letter-spacing: 0.04em; }
+    .header-right { text-align: right; }
+    .timestamp { font-size: 11px; color: #8B949E; }
+    .timestamp span { color: #E6EDF3; }
+    .refresh-btn { margin-top: 6px; background: none; border: 0.5px solid #30363D; color: #8B949E; font-family: 'DM Mono', monospace; font-size: 10px; padding: 3px 10px; border-radius: 3px; cursor: pointer; letter-spacing: 0.06em; }
+    .refresh-btn:hover { border-color: #8B949E; color: #E6EDF3; }
+
+    /* Section labels */
+    .section-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #8B949E; margin-bottom: 1rem; }
+
+    /* Price strip */
+    .price-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: #21262D; border: 0.5px solid #21262D; border-radius: 6px; overflow: hidden; margin-bottom: 2rem; }
+    .price-card { background: #161B22; padding: 1.1rem 1.2rem; }
+    .price-label { font-size: 10px; color: #8B949E; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .price-val { font-size: 24px; font-weight: 500; color: #E6EDF3; letter-spacing: -0.02em; margin-bottom: 0.2rem; }
+    .price-change { font-size: 11px; }
+    .pos { color: #3FB950; }
+    .neg { color: #F85149; }
+    .neu { color: #8B949E; }
+    .price-sub { font-size: 10px; color: #8B949E; margin-top: 4px; }
+
+    /* Two column layout */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+
+    /* Cards */
+    .card { background: #161B22; border: 0.5px solid #21262D; border-radius: 6px; padding: 1.2rem; }
+    .card-title { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #8B949E; margin-bottom: 1rem; }
+
+    /* Metric rows */
+    .metric-row { display: flex; justify-content: space-between; align-items: baseline; padding: 6px 0; border-bottom: 0.5px solid #21262D; }
+    .metric-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .metric-name { font-size: 12px; color: #8B949E; }
+    .metric-val { font-size: 13px; color: #E6EDF3; font-weight: 500; }
+    .metric-sub { font-size: 10px; color: #8B949E; }
+
+    /* DVOL gauge */
+    .dvol-display { display: flex; align-items: baseline; gap: 8px; margin: 0.8rem 0 0.5rem; }
+    .dvol-num { font-size: 36px; font-weight: 500; letter-spacing: -0.03em; }
+    .dvol-label { font-size: 11px; color: #8B949E; }
+    .dvol-bar-wrap { width: 100%; height: 4px; background: #21262D; border-radius: 2px; margin-bottom: 6px; }
+    .dvol-bar { height: 4px; border-radius: 2px; transition: width 0.4s ease; }
+    .dvol-scale { display: flex; justify-content: space-between; font-size: 9px; color: #8B949E; }
+
+    /* Put/call ratio */
+    .pcr-display { display: flex; align-items: baseline; gap: 8px; margin: 0.8rem 0 0.5rem; }
+    .pcr-num { font-size: 36px; font-weight: 500; letter-spacing: -0.03em; }
+    .pcr-bar-wrap { display: flex; height: 6px; border-radius: 3px; overflow: hidden; margin-bottom: 6px; gap: 2px; }
+    .pcr-calls { background: #3FB950; height: 6px; border-radius: 1px; }
+    .pcr-puts  { background: #F85149; height: 6px; border-radius: 1px; }
+    .pcr-legend { display: flex; gap: 1rem; font-size: 10px; color: #8B949E; }
+    .pcr-legend span { display: flex; align-items: center; gap: 4px; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; }
+
+    /* Funding rate */
+    .funding-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 0.5rem; }
+    .funding-item { background: #0D1117; border-radius: 4px; padding: 10px 12px; }
+    .funding-asset { font-size: 10px; color: #8B949E; letter-spacing: 0.08em; margin-bottom: 4px; }
+    .funding-rate { font-size: 18px; font-weight: 500; }
+
+    /* OI display */
+    .oi-big { font-size: 28px; font-weight: 500; letter-spacing: -0.02em; margin: 0.5rem 0 0.2rem; }
+
+    /* Desk note */
+    .desk-note { background: #161B22; border: 0.5px solid #21262D; border-left: 2px solid #E5374B; border-radius: 0 6px 6px 0; padding: 1.2rem 1.4rem; margin-bottom: 2rem; }
+    .desk-note-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #E5374B; margin-bottom: 0.7rem; }
+    .desk-note-text { font-size: 12px; color: #8B949E; line-height: 1.75; }
+    .desk-note-text strong { color: #E6EDF3; font-weight: 500; }
+
+    /* Reg strip */
+    .reg-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
+    .reg-item { background: #161B22; border: 0.5px solid #21262D; border-radius: 6px; padding: 1rem 1.2rem; }
+    .reg-tag { display: inline-block; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 6px; border-radius: 2px; margin-bottom: 0.5rem; }
+    .tag-active { background: #1F3A2D; color: #3FB950; }
+    .tag-pending { background: #2D1F1F; color: #F85149; }
+    .tag-watch { background: #1F2A3D; color: #58A6FF; }
+    .reg-title { font-size: 12px; font-weight: 500; color: #E6EDF3; margin-bottom: 0.3rem; }
+    .reg-desc { font-size: 11px; color: #8B949E; line-height: 1.6; }
+
+    /* Loading state */
+    .loading { color: #8B949E; font-size: 11px; }
+    .error { color: #F85149; font-size: 11px; }
+
+    /* Footer */
+    .footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 0.5px solid #21262D; font-size: 11px; color: #8B949E; line-height: 1.7; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <svg role="img" viewBox="0 0 24 24" height="24" width="24" fill="#E5374B" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19.8285 6.6117l-5.52-5.535a3.1352 3.1352 0 00-4.5 0l-5.535 5.535 7.755 3.87zm2.118 2.235l1.095 1.095a3.12 3.12 0 010 4.5L14.22 23.3502a2.6846 2.6846 0 01-.72.525V13.0767zm-19.893 0l-1.095 1.095a3.1198 3.1198 0 000 4.5L9.78 23.3502c.2091.214.4525.3914.72.525V13.0767z"/>
+      </svg>
+      <div class="header-text">
+        <h1>Daily Institutional Market Color</h1>
+        <p>Blockchain.com OTC Desk &nbsp;·&nbsp; Prepared by Justin Thom &nbsp;·&nbsp; Institutional Sales Associate Application</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="timestamp">As of <span id="timestamp">—</span></div>
+      <button class="refresh-btn" onclick="loadAll()">↻ Refresh</button>
+    </div>
+  </div>
+
+  <!-- Price Strip -->
+  <div class="section-label">Spot Markets</div>
+  <div class="price-strip">
+    <div class="price-card">
+      <div class="price-label">BTC / USD</div>
+      <div class="price-val" id="btc-price">—</div>
+      <div class="price-change" id="btc-change">—</div>
+      <div class="price-sub" id="btc-vol">Vol: —</div>
+    </div>
+    <div class="price-card">
+      <div class="price-label">ETH / USD</div>
+      <div class="price-val" id="eth-price">—</div>
+      <div class="price-change" id="eth-change">—</div>
+      <div class="price-sub" id="eth-vol">Vol: —</div>
+    </div>
+    <div class="price-card">
+      <div class="price-label">BTC Dominance</div>
+      <div class="price-val" id="btc-dom">—</div>
+      <div class="price-sub" id="btc-dom-sub">Global crypto market share</div>
+    </div>
+    <div class="price-card">
+      <div class="price-label">Total Crypto Mkt Cap</div>
+      <div class="price-val" id="total-mcap">—</div>
+      <div class="price-sub" id="mcap-change">24h change: —</div>
+    </div>
+  </div>
+
+  <!-- Options + Derivatives -->
+  <div class="section-label">Derivatives & Options</div>
+  <div class="grid-3" style="margin-bottom:2rem">
+
+    <!-- DVOL -->
+    <div class="card">
+      <div class="card-title">BTC Implied Volatility (DVOL)</div>
+      <div class="dvol-display">
+        <div class="dvol-num" id="dvol-val">—</div>
+        <div class="dvol-label">30-day IV</div>
+      </div>
+      <div class="dvol-bar-wrap"><div class="dvol-bar" id="dvol-bar" style="width:0%"></div></div>
+      <div class="dvol-scale"><span>Low (20)</span><span>Neutral (60)</span><span>High (100)</span></div>
+      <div style="margin-top:0.8rem">
+        <div class="metric-row">
+          <span class="metric-name">ETH DVOL</span>
+          <span class="metric-val" id="eth-dvol">—</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-name">BTC/ETH Vol Spread</span>
+          <span class="metric-val" id="vol-spread">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Put/Call -->
+    <div class="card">
+      <div class="card-title">BTC Options Put/Call Ratio</div>
+      <div class="pcr-display">
+        <div class="pcr-num" id="pcr-val">—</div>
+        <div class="dvol-label" id="pcr-sentiment">—</div>
+      </div>
+      <div class="pcr-bar-wrap">
+        <div class="pcr-calls" id="pcr-calls-bar" style="width:50%"></div>
+        <div class="pcr-puts" id="pcr-puts-bar" style="width:50%"></div>
+      </div>
+      <div class="pcr-legend">
+        <span><span class="dot" style="background:#3FB950"></span>Calls</span>
+        <span><span class="dot" style="background:#F85149"></span>Puts</span>
+      </div>
+      <div style="margin-top:0.8rem">
+        <div class="metric-row">
+          <span class="metric-name">BTC OI (Options)</span>
+          <span class="metric-val" id="btc-oi">—</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-name">ETH OI (Options)</span>
+          <span class="metric-val" id="eth-oi">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Funding + Basis -->
+    <div class="card">
+      <div class="card-title">Perp Funding Rates (8h)</div>
+      <div class="funding-grid">
+        <div class="funding-item">
+          <div class="funding-asset">BTC-PERP</div>
+          <div class="funding-rate" id="btc-funding">—</div>
+        </div>
+        <div class="funding-item">
+          <div class="funding-asset">ETH-PERP</div>
+          <div class="funding-rate" id="eth-funding">—</div>
+        </div>
+      </div>
+      <div style="margin-top:0.8rem">
+        <div class="metric-row">
+          <span class="metric-name">BTC Futures OI</span>
+          <span class="metric-val" id="btc-fut-oi">—</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-name">BTC 24h Futures Vol</span>
+          <span class="metric-val" id="btc-fut-vol">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Desk Note -->
+  <div class="desk-note">
+    <div class="desk-note-label">OTC Desk Note — Today's Colour</div>
+    <div class="desk-note-text" id="desk-note-text">Loading market conditions...</div>
+  </div>
+
+  <!-- Regulatory Landscape -->
+  <div class="section-label">AMER Regulatory Landscape</div>
+  <div class="reg-strip">
+    <div class="reg-item">
+      <span class="reg-tag tag-active">Enacted</span>
+      <div class="reg-title">GENIUS Act — Stablecoin Framework</div>
+      <div class="reg-desc">Signed into law 2025. Establishes federal framework for payment stablecoins, requiring 1:1 reserves and monthly disclosures. Accelerates institutional adoption of stablecoin settlement — directly relevant to Blockchain.com OTC settlement flows.</div>
+    </div>
+    <div class="reg-item">
+      <span class="reg-tag tag-pending">Expected 2026</span>
+      <div class="reg-title">Digital Asset Market Structure Bill</div>
+      <div class="reg-desc">Bipartisan legislation expected to pass in 2026. Will clarify SEC vs. CFTC jurisdiction over digital assets, establish spot market guidelines, and facilitate regulated digital asset securities trading — lowering compliance barriers for institutional OTC onboarding.</div>
+    </div>
+    <div class="reg-item">
+      <span class="reg-tag tag-active">In Effect</span>
+      <div class="reg-title">MiCA — EU Markets in Crypto Assets</div>
+      <div class="reg-desc">Blockchain.com secured MiCA license in late 2025, enabling custody and exchange services across all 27 EU member states. Signals institutional-grade regulatory credibility relevant to AMER clients operating globally.</div>
+    </div>
+    <div class="reg-item">
+      <span class="reg-tag tag-watch">Monitor</span>
+      <div class="reg-title">CFTC Swap Dealer Classification</div>
+      <div class="reg-desc">Ongoing CFTC rulemaking may bring bilateral crypto derivatives (including OTC options and NDFs) under Swap Dealer registration requirements. Key consideration for institutional clients entering OTC options programs with Blockchain.com's desk.</div>
+    </div>
+  </div>
+
+  <!-- OTC Market Context -->
+  <div class="section-label">OTC Market Context</div>
+  <div class="grid-2" style="margin-bottom:2rem">
+    <div class="card">
+      <div class="card-title">Institutional OTC Spot Volumes</div>
+      <div class="metric-row">
+        <span class="metric-name">2025 YoY Volume Growth</span>
+        <span class="metric-val pos">+109%</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-name">Institutions Preferring OTC</span>
+        <span class="metric-val">40%</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-name">Vol Routed Off-Exchange</span>
+        <span class="metric-val">>50%</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-name">Stablecoin OTC Settlement Share</span>
+        <span class="metric-val">78%</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-name">Est. Daily OTC Liquidity Access</span>
+        <span class="metric-val">>$1.5T</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Options Market Structure</div>
+      <div class="metric-row">
+        <span class="metric-name">BTC Derivatives Share of Activity</span>
+        <span class="metric-val">~88%</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-name">IBIT Options Open Interest</span>
+        <span class="metric-val">~$40B</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-name">Covered Call Annualised Yield</span>
+        <span class="metric-val pos">12–18%</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-name">Cash-Carry Yield (Collapsed)</span>
+        <span class="metric-val neg">~5%</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-name">Deribit BTC/ETH Market Share</span>
+        <span class="metric-val">~85%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Live data: BTC/ETH spot via CoinGecko API · Options data via Deribit public API · Funding rates via Binance public API.<br>
+    OTC market statistics: Finery Markets State of Crypto OTC 2026 · Options market data: CryptoSlate, June 2026.<br>
+    Regulatory landscape: GENIUS Act (2025) · Grayscale 2026 Digital Asset Outlook · CFTC public rulemaking.<br>
+    Prepared by Justin Thom for Blockchain.com Institutional Sales Associate application · July 2026. For illustrative purposes only.
+  </div>
+
+</div>
+
+<script>
+function fmt(n) {
+  if (n >= 1e12) return '$' + (n/1e12).toFixed(2) + 'T';
+  if (n >= 1e9)  return '$' + (n/1e9).toFixed(2) + 'B';
+  if (n >= 1e6)  return '$' + (n/1e6).toFixed(2) + 'M';
+  return '$' + n.toLocaleString();
+}
+
+function fmtPrice(n) {
+  return '$' + n.toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:0});
+}
+
+function setChange(el, pct) {
+  const sign = pct >= 0 ? '+' : '';
+  el.textContent = sign + pct.toFixed(2) + '% (24h)';
+  el.className = 'price-change ' + (pct >= 0 ? 'pos' : 'neg');
+}
+
+function updateTimestamp() {
+  const now = new Date();
+  document.getElementById('timestamp').textContent = now.toLocaleString('en-US', {
+    month:'short', day:'numeric', year:'numeric',
+    hour:'2-digit', minute:'2-digit', timeZoneName:'short'
+  });
+}
+
+async function loadSpot() {
+  try {
+    const r = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum&order=market_cap_desc&sparkline=false');
+    const data = await r.json();
+    const btc = data.find(d => d.id === 'bitcoin');
+    const eth = data.find(d => d.id === 'ethereum');
+    if (btc) {
+      document.getElementById('btc-price').textContent = fmtPrice(btc.current_price);
+      setChange(document.getElementById('btc-change'), btc.price_change_percentage_24h);
+      document.getElementById('btc-vol').textContent = 'Vol: ' + fmt(btc.total_volume);
+    }
+    if (eth) {
+      document.getElementById('eth-price').textContent = fmtPrice(eth.current_price);
+      setChange(document.getElementById('eth-change'), eth.price_change_percentage_24h);
+      document.getElementById('eth-vol').textContent = 'Vol: ' + fmt(eth.total_volume);
+    }
+  } catch(e) { console.warn('Spot API error', e); }
+}
+
+async function loadGlobal() {
+  try {
+    const r = await fetch('https://api.coingecko.com/api/v3/global');
+    const d = (await r.json()).data;
+    const dom = d.market_cap_percentage.btc;
+    document.getElementById('btc-dom').textContent = dom.toFixed(1) + '%';
+    const mcap = d.total_market_cap.usd;
+    document.getElementById('total-mcap').textContent = fmt(mcap);
+    const mcapChg = d.market_cap_change_percentage_24h_usd;
+    const mcEl = document.getElementById('mcap-change');
+    mcEl.textContent = '24h: ' + (mcapChg >= 0 ? '+' : '') + mcapChg.toFixed(2) + '%';
+    mcEl.className = 'price-sub ' + (mcapChg >= 0 ? 'pos' : 'neg');
+  } catch(e) { console.warn('Global API error', e); }
+}
+
+async function loadDeribit() {
+  try {
+    // DVOL BTC
+    const dvR = await fetch('https://www.deribit.com/api/v2/public/get_volatility_index_data?currency=BTC&resolution=3600&count=1');
+    const dvData = await dvR.json();
+    let btcDvol = null;
+    if (dvData.result && dvData.result.data && dvData.result.data.length) {
+      btcDvol = dvData.result.data[dvData.result.data.length - 1][4]; // close
+      const dvEl = document.getElementById('dvol-val');
+      dvEl.textContent = btcDvol.toFixed(1);
+      dvEl.className = 'dvol-num ' + (btcDvol > 70 ? 'neg' : btcDvol > 50 ? 'neu' : 'pos');
+      const pct = Math.min(((btcDvol - 20) / 80) * 100, 100);
+      const bar = document.getElementById('dvol-bar');
+      bar.style.width = pct + '%';
+      bar.style.background = btcDvol > 70 ? '#F85149' : btcDvol > 50 ? '#D29922' : '#3FB950';
+    }
+
+    // DVOL ETH
+    const dvEthR = await fetch('https://www.deribit.com/api/v2/public/get_volatility_index_data?currency=ETH&resolution=3600&count=1');
+    const dvEthData = await dvEthR.json();
+    if (dvEthData.result && dvEthData.result.data && dvEthData.result.data.length) {
+      const ethDvol = dvEthData.result.data[dvEthData.result.data.length - 1][4];
+      document.getElementById('eth-dvol').textContent = ethDvol.toFixed(1);
+      if (btcDvol !== null) {
+        const spread = (ethDvol - btcDvol).toFixed(1);
+        document.getElementById('vol-spread').textContent = (spread >= 0 ? '+' : '') + spread + ' pts';
+      }
+    }
+
+    // Book summary for put/call + OI
+    const bsR = await fetch('https://www.deribit.com/api/v2/public/get_book_summary_by_currency?currency=BTC&kind=option');
+    const bsData = await bsR.json();
+    if (bsData.result) {
+      let calls = 0, puts = 0, totalOI = 0;
+      bsData.result.forEach(item => {
+        totalOI += item.open_interest || 0;
+        if (item.instrument_name && item.instrument_name.includes('-C')) calls += item.open_interest || 0;
+        if (item.instrument_name && item.instrument_name.includes('-P')) puts += item.open_interest || 0;
+      });
+      const pcr = puts > 0 ? (puts / calls) : 0;
+      const pcrEl = document.getElementById('pcr-val');
+      pcrEl.textContent = pcr.toFixed(2);
+      pcrEl.className = 'pcr-num ' + (pcr > 0.8 ? 'neg' : pcr < 0.5 ? 'pos' : 'neu');
+      document.getElementById('pcr-sentiment').textContent = pcr > 0.8 ? '— Bearish lean' : pcr < 0.5 ? '— Bullish lean' : '— Neutral';
+      const callPct = (calls / (calls + puts)) * 100;
+      const putPct = 100 - callPct;
+      document.getElementById('pcr-calls-bar').style.width = callPct + '%';
+      document.getElementById('pcr-puts-bar').style.width = putPct + '%';
+
+      // Get spot price for OI in USD
+      const btcPriceEl = document.getElementById('btc-price');
+      const btcPriceText = btcPriceEl.textContent.replace(/[$,]/g,'');
+      const btcPriceNum = parseFloat(btcPriceText) || 60000;
+      document.getElementById('btc-oi').textContent = fmt(totalOI * btcPriceNum);
+    }
+
+    // ETH options OI
+    const ethBsR = await fetch('https://www.deribit.com/api/v2/public/get_book_summary_by_currency?currency=ETH&kind=option');
+    const ethBsData = await ethBsR.json();
+    if (ethBsData.result) {
+      let ethOI = 0;
+      ethBsData.result.forEach(item => { ethOI += item.open_interest || 0; });
+      const ethPriceEl = document.getElementById('eth-price');
+      const ethPriceText = ethPriceEl.textContent.replace(/[$,]/g,'');
+      const ethPriceNum = parseFloat(ethPriceText) || 3000;
+      document.getElementById('eth-oi').textContent = fmt(ethOI * ethPriceNum);
+    }
+
+    // Futures summary
+    const futR = await fetch('https://www.deribit.com/api/v2/public/get_book_summary_by_currency?currency=BTC&kind=future');
+    const futData = await futR.json();
+    if (futData.result) {
+      let futOI = 0, futVol = 0;
+      futData.result.forEach(item => {
+        futOI += item.open_interest || 0;
+        futVol += item.volume || 0;
+      });
+      const btcPriceNum = parseFloat(document.getElementById('btc-price').textContent.replace(/[$,]/g,'')) || 60000;
+      document.getElementById('btc-fut-oi').textContent = fmt(futOI * btcPriceNum);
+      document.getElementById('btc-fut-vol').textContent = fmt(futVol * btcPriceNum);
+    }
+
+  } catch(e) { console.warn('Deribit API error', e); }
+}
+
+async function loadFunding() {
+  try {
+    const btcR = await fetch('https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT');
+    const btcData = await btcR.json();
+    if (btcData.lastFundingRate !== undefined) {
+      const rate = parseFloat(btcData.lastFundingRate) * 100;
+      const el = document.getElementById('btc-funding');
+      el.textContent = (rate >= 0 ? '+' : '') + rate.toFixed(4) + '%';
+      el.className = 'funding-rate ' + (rate > 0.01 ? 'pos' : rate < -0.01 ? 'neg' : 'neu');
+    }
+  } catch(e) {}
+  try {
+    const ethR = await fetch('https://fapi.binance.com/fapi/v1/premiumIndex?symbol=ETHUSDT');
+    const ethData = await ethR.json();
+    if (ethData.lastFundingRate !== undefined) {
+      const rate = parseFloat(ethData.lastFundingRate) * 100;
+      const el = document.getElementById('eth-funding');
+      el.textContent = (rate >= 0 ? '+' : '') + rate.toFixed(4) + '%';
+      el.className = 'funding-rate ' + (rate > 0.01 ? 'pos' : rate < -0.01 ? 'neg' : 'neu');
+    }
+  } catch(e) { console.warn('Funding API error', e); }
+}
+
+function generateDeskNote() {
+  // Build a contextual desk note from the live data once loaded
+  setTimeout(() => {
+    const btcPrice = document.getElementById('btc-price').textContent;
+    const btcChg = document.getElementById('btc-change').textContent;
+    const dvol = document.getElementById('dvol-val').textContent;
+    const pcr = document.getElementById('pcr-val').textContent;
+    const dvolNum = parseFloat(dvol) || 50;
+    const pcrNum = parseFloat(pcr) || 0.6;
+    const btcFunding = document.getElementById('btc-funding').textContent;
+    const fundingNum = parseFloat(btcFunding) || 0;
+
+    const volColor = dvolNum > 70 ? 'elevated' : dvolNum > 50 ? 'moderate' : 'compressed';
+    const pcrSentiment = pcrNum > 0.8 ? 'put-heavy, suggesting institutional demand for downside protection' : pcrNum < 0.5 ? 'call-dominated, reflecting a bullish positioning tilt' : 'balanced, indicating a neutral institutional posture';
+    const fundingNote = Math.abs(fundingNum) < 0.005 ? 'Perpetual funding is near flat, consistent with a range-bound spot market.' : fundingNum > 0.01 ? `Perpetual funding is elevated at ${btcFunding}, indicating longs are paying a premium — basis trades may be compressing.` : `Funding has flipped negative at ${btcFunding}, suggesting short-side pressure in the derivatives market.`;
+
+    document.getElementById('desk-note-text').innerHTML =
+      `BTC is trading at <strong>${btcPrice}</strong> (${btcChg}). ` +
+      `Implied volatility (DVOL) is <strong>${volColor} at ${dvol}</strong>, with the options market ${pcrSentiment} at a put/call ratio of <strong>${pcr}</strong>. ` +
+      `${fundingNote} ` +
+      `Against this backdrop, the Blockchain.com OTC desk is well-positioned to structure <strong>zero-cost collars for treasury-heavy clients</strong> seeking downside protection without premium outlay, and <strong>covered call yield programs</strong> for institutions holding idle BTC at current implied vol levels. ` +
+      `Block spot demand from ETF rebalancing flows and miner production sales remains the primary near-term driver for OTC execution volumes.`;
+  }, 2500);
+}
+
+async function loadAll() {
+  updateTimestamp();
+  document.getElementById('desk-note-text').textContent = 'Loading market conditions...';
+  await Promise.all([loadSpot(), loadGlobal()]);
+  await loadDeribit();
+  await loadFunding();
+  generateDeskNote();
+}
+
+loadAll();
+</script>
+</body>
+</html>
