@@ -19,16 +19,18 @@ exports.handler = async function(event, context) {
         'anthropic-beta': 'web-search-2025-03-05'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 2000,
+        model: 'claude-haiku-4-5',
+        max_tokens: 300,
         tools: [{ type: 'web_search_20250305', name: 'web_search' }],
         messages: body.messages
       })
     });
 
     const data = await response.json();
+    // Extract text content from response
     const textBlock = data.content && data.content.find(b => b.type === 'text');
     const text = textBlock ? textBlock.text : null;
+    // Log for debugging
     console.log('RAW RESPONSE:', JSON.stringify(text));
     return {
       statusCode: 200,
