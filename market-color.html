@@ -524,8 +524,7 @@ function generateDeskNote() {
 
 
 async function loadNews() {
-  const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-  const cacheKey = 'blockchain_news_' + new Date().toLocaleDateString();
+  const cacheKey = 'blockchain_news_rss_' + new Date().toLocaleDateString();
   const cached = sessionStorage.getItem(cacheKey);
 
   if (cached) {
@@ -536,67 +535,40 @@ async function loadNews() {
     return;
   }
 
-  // Single API call for all three sections
-  try {
-    const response = await fetch('/.netlify/functions/claude-proxy', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        messages: [{
-          role: 'user',
-          content: `Search the web for crypto news today ${today}. You must respond in exactly this format and nothing else:
+  // Use RSS2JSON as a free CORS proxy for RSS feeds
+  const RSS2JSON = 'https://api.rss2json.com/v1/api.json?rss_url=';
 
-MARKETS:
-1. [one sentence about crypto market news]
-2. [one sentence about crypto market news]
-3. [one sentence about crypto market news]
+  const feeds = {
+    markets: 'https://www.coindesk.com/arc/outboundfeeds/rss/',
+    reg: 'https://cointelegraph.com/rss/tag/regulation',
+    protocols: 'https://cointelegraph.com/rss/tag/blockchain'
+  };
 
-REGULATION:
-1. [one sentence about US crypto regulation news]
-2. [one sentence about US crypto regulation news]
-3. [one sentence about US crypto regulation news]
-
-PROTOCOLS:
-1. [one sentence about blockchain protocol or DeFi news]
-2. [one sentence about blockchain protocol or DeFi news]
-3. [one sentence about blockchain protocol or DeFi news]
-
-Do not write anything before MARKETS: or after the last line. Fill in all 9 items.`
-        }]
-      })
-    });
-
-    const data = await response.json();
-    const textBlock = data.content && data.content.find(b => b.type === 'text');
-    const text = textBlock ? textBlock.text : '';
-
-    // Parse sections
-    const marketsMatch = text.match(/MARKETS:([\s\S]*?)(?=REGULATION:|$)/);
-    const regMatch = text.match(/REGULATION:([\s\S]*?)(?=PROTOCOLS:|$)/);
-    const protocolsMatch = text.match(/PROTOCOLS:([\s\S]*?)$/);
-
-    const parseItems = (block) => block ? block[1].split('\n')
-      .map(l => l.replace(/^[\d\.]+\s*/, '').trim())
-      .filter(l => l.length > 15) : [];
-
-    const result = {
-      markets: parseItems(marketsMatch),
-      reg: parseItems(regMatch),
-      protocols: parseItems(protocolsMatch)
-    };
-
-    // Cache for the day
-    sessionStorage.setItem(cacheKey, JSON.stringify(result));
-
-    renderNews('news-markets-list', 'news-markets-loading', result.markets);
-    renderNews('news-reg-list', 'news-reg-loading', result.reg);
-    renderNews('news-protocols-list', 'news-protocols-loading', result.protocols);
-
-  } catch(e) {
-    ['news-markets-loading','news-reg-loading','news-protocols-loading'].forEach(id => {
-      document.getElementById(id).innerHTML = '<span style="color:#F85149">Unable to load.</span>';
-    });
+  async function fetchFeed(url) {
+    try {
+      const r = await fetch(RSS2JSON + encodeURIComponent(url));
+      const data = await r.json();
+      if (data.status === 'ok' && data.items) {
+        return data.items.slice(0, 3).map(item => item.title);
+      }
+      return [];
+    } catch(e) {
+      return [];
+    }
   }
+
+  const [markets, reg, protocols] = await Promise.all([
+    fetchFeed(feeds.markets),
+    fetchFeed(feeds.reg),
+    fetchFeed(feeds.protocols)
+  ]);
+
+  const result = { markets, reg, protocols };
+  sessionStorage.setItem(cacheKey, JSON.stringify(result));
+
+  renderNews('news-markets-list', 'news-markets-loading', markets);
+  renderNews('news-reg-list', 'news-reg-loading', reg);
+  renderNews('news-protocols-list', 'news-protocols-loading', protocols);
 }
 
 function renderNews(listId, loadingId, items) {
