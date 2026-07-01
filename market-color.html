@@ -535,33 +535,32 @@ async function loadNews() {
     return;
   }
 
-  // Use RSS2JSON as a free CORS proxy for RSS feeds
   const RSS2JSON = 'https://api.rss2json.com/v1/api.json?rss_url=';
+  const COINDESK = 'https://www.coindesk.com/arc/outboundfeeds/rss/';
+  const COINTELEGRAPH = 'https://cointelegraph.com/rss';
 
-  const feeds = {
-    markets: 'https://www.coindesk.com/arc/outboundfeeds/rss/',
-    reg: 'https://cointelegraph.com/rss/tag/regulation',
-    protocols: 'https://www.coindesk.com/arc/outboundfeeds/rss/category/tech/'
-  };
+  const regKeywords = ['sec', 'cftc', 'congress', 'regulation', 'bill', 'law', 'senate', 'house', 'mica', 'clarity act', 'genius act', 'federal', 'enforcement', 'legislation'];
+  const protocolKeywords = ['ethereum', 'solana', 'defi', 'layer 2', 'protocol', 'blockchain', 'aave', 'uniswap', 'base', 'arbitrum', 'polygon', 'upgrade', 'launch', 'network', 'on-chain', 'staking', 'validator'];
 
   async function fetchFeed(url) {
     try {
       const r = await fetch(RSS2JSON + encodeURIComponent(url));
       const data = await r.json();
-      if (data.status === 'ok' && data.items) {
-        return data.items.slice(0, 3).map(item => item.title);
-      }
+      if (data.status === 'ok' && data.items) return data.items.map(i => i.title);
       return [];
-    } catch(e) {
-      return [];
-    }
+    } catch(e) { return []; }
   }
 
-  const [markets, reg, protocols] = await Promise.all([
-    fetchFeed(feeds.markets),
-    fetchFeed(feeds.reg),
-    fetchFeed(feeds.protocols)
+  const [coindeskItems, cointelegraphItems] = await Promise.all([
+    fetchFeed(COINDESK),
+    fetchFeed(COINTELEGRAPH)
   ]);
+
+  const allItems = [...coindeskItems, ...cointelegraphItems];
+
+  const reg = allItems.filter(t => regKeywords.some(k => t.toLowerCase().includes(k))).slice(0, 3);
+  const protocols = allItems.filter(t => protocolKeywords.some(k => t.toLowerCase().includes(k))).slice(0, 3);
+  const markets = allItems.filter(t => !reg.includes(t) && !protocols.includes(t)).slice(0, 3);
 
   const result = { markets, reg, protocols };
   sessionStorage.setItem(cacheKey, JSON.stringify(result));
