@@ -20,17 +20,15 @@ exports.handler = async function(event, context) {
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5',
-        max_tokens: 300,
+        max_tokens: 600,
         tools: [{ type: 'web_search_20250305', name: 'web_search' }],
         messages: body.messages
       })
     });
 
     const data = await response.json();
-    // Extract text content from response
     const textBlock = data.content && data.content.find(b => b.type === 'text');
     const text = textBlock ? textBlock.text : null;
-    // Log for debugging
     console.log('RAW RESPONSE:', JSON.stringify(text));
     return {
       statusCode: 200,
