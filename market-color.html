@@ -542,7 +542,7 @@ async function fetchNewsSection(topic, listId, loadingId, prompt) {
     // Parse bullet points — expect lines starting with - or • or numbers
     const lines = text.split('\n')
       .map(l => l.replace(/^[\-\•\*\d\.]+\s*/, '').trim())
-      .filter(l => l.length > 20);
+      .filter(l => l.length > 20 && !l.endsWith(':'));
 
     loadingEl.style.display = 'none';
     listEl.style.display = 'block';
@@ -567,21 +567,21 @@ async function loadNews() {
     'markets',
     'news-markets-list',
     'news-markets-loading',
-    `Search for the top 5 most important cryptocurrency and Bitcoin market news headlines from the last 24 hours as of ${today}. Focus on price movements, major institutional activity, exchange news, and significant market events. Return only a plain bulleted list of 5 concise one-sentence headlines, no preamble, no markdown formatting, no bold text.`
+    `Search for the top 5 most important cryptocurrency and Bitcoin market news headlines from the last 24 hours as of ${today}. Focus on price movements, major institutional activity, exchange news, and significant market events. Return ONLY a plain numbered list of 5 concise one-sentence headlines. No introduction, no preamble, no conclusion, no markdown, no bold text. Start directly with 1.`
   );
 
   fetchNewsSection(
     'reg',
     'news-reg-list',
     'news-reg-loading',
-    `Search for the latest US cryptocurrency regulation news from the last 7 days as of ${today}. Focus on SEC, CFTC, Congress, White House, and federal agency developments related to digital assets, crypto market structure legislation, and stablecoin regulation. Return only a plain bulleted list of 5 concise one-sentence updates, no preamble, no markdown formatting, no bold text.`
+    `Search for the latest US cryptocurrency regulation news from the last 7 days as of ${today}. Focus on SEC, CFTC, Congress, White House, and federal agency developments related to digital assets, crypto market structure legislation, and stablecoin regulation. Return ONLY a plain numbered list of 5 concise one-sentence updates. No introduction, no preamble, no conclusion, no markdown, no bold text. Start directly with 1.`
   );
 
   fetchNewsSection(
     'protocols',
     'news-protocols-list',
     'news-protocols-loading',
-    `Search for the latest emerging blockchain protocol and DeFi news from the last 7 days as of ${today}. Focus on new protocol launches, major upgrades, Layer 2 developments, DeFi milestones, and significant on-chain developments relevant to institutional investors. Return only a plain bulleted list of 5 concise one-sentence updates, no preamble, no markdown formatting, no bold text.`
+    `Search for the latest emerging blockchain protocol and DeFi news from the last 7 days as of ${today}. Focus on new protocol launches, major upgrades, Layer 2 developments, DeFi milestones, and significant on-chain developments relevant to institutional investors. Return ONLY a plain numbered list of 5 concise one-sentence updates. No introduction, no preamble, no conclusion, no markdown, no bold text. Start directly with 1.`
   );
 }
 
