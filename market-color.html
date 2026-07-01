@@ -562,6 +562,11 @@ async function loadNews() {
   const protocols = allItems.filter(t => protocolKeywords.some(k => t.toLowerCase().includes(k))).slice(0, 3);
   const markets = allItems.filter(t => !reg.includes(t) && !protocols.includes(t)).slice(0, 3);
 
+  console.log('ALL ITEMS:', allItems);
+  console.log('REG:', reg);
+  console.log('PROTOCOLS:', protocols);
+  console.log('MARKETS:', markets);
+
   const result = { markets, reg, protocols };
   sessionStorage.setItem(cacheKey, JSON.stringify(result));
 
