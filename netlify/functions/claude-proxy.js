@@ -20,13 +20,16 @@ exports.handler = async function(event, context) {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
+        max_tokens: 2000,
         tools: [{ type: 'web_search_20250305', name: 'web_search' }],
         messages: body.messages
       })
     });
 
     const data = await response.json();
+    const textBlock = data.content && data.content.find(b => b.type === 'text');
+    const text = textBlock ? textBlock.text : null;
+    console.log('RAW RESPONSE:', JSON.stringify(text));
     return {
       statusCode: 200,
       headers: {
