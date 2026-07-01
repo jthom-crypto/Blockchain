@@ -540,18 +540,24 @@ async function fetchNewsSection(topic, listId, loadingId, prompt) {
     if (!text) throw new Error('No text response');
 
     // Parse bullet points — expect lines starting with - or • or numbers
-    const lines = text.split('\n')
+    // Split on newlines first, then also try splitting on numbered pattern
+    let lines = text.split('\n');
+    // Also try splitting inline numbered items like "1. headline 2. headline"
+    if (lines.length <= 2) {
+      lines = text.split(/(?=\d+\.)/);
+    }
+    const parsed = lines
       .map(l => l.replace(/^[\-\•\*\d\.]+\s*/, '').trim())
       .filter(l => l.length > 20 && !l.endsWith(':'));
 
     loadingEl.style.display = 'none';
     listEl.style.display = 'block';
-    lines.slice(0, 5).forEach(line => {
+    parsed.slice(0, 3).forEach(line => {
       const li = document.createElement('li');
       li.textContent = line;
       listEl.appendChild(li);
     });
-    if (lines.length === 0) {
+    if (parsed.length === 0) {
       loadingEl.textContent = 'No recent headlines found.';
     }
   } catch(e) {
@@ -570,12 +576,16 @@ async function loadNews() {
     `Search for the top 5 most important cryptocurrency and Bitcoin market news headlines from the last 24 hours as of ${today}. Focus on price movements, major institutional activity, exchange news, and significant market events. Return ONLY a plain numbered list of 5 concise one-sentence headlines. No introduction, no preamble, no conclusion, no markdown, no bold text. Start directly with 1.`
   );
 
+  await new Promise(r => setTimeout(r, 2000));
+
   fetchNewsSection(
     'reg',
     'news-reg-list',
     'news-reg-loading',
     `Search for the latest US cryptocurrency regulation news from the last 7 days as of ${today}. Focus on SEC, CFTC, Congress, White House, and federal agency developments related to digital assets, crypto market structure legislation, and stablecoin regulation. Return ONLY a plain numbered list of 5 concise one-sentence updates. No introduction, no preamble, no conclusion, no markdown, no bold text. Start directly with 1.`
   );
+
+  await new Promise(r => setTimeout(r, 2000));
 
   fetchNewsSection(
     'protocols',
