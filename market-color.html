@@ -544,22 +544,24 @@ async function loadNews() {
       body: JSON.stringify({
         messages: [{
           role: 'user',
-          content: `Search for today's crypto news as of ${today}. Return exactly this format with no other text:
+          content: `Search the web for crypto news today ${today}. You must respond in exactly this format and nothing else:
 
 MARKETS:
-1. [one sentence]
-2. [one sentence]
-3. [one sentence]
+1. [one sentence about crypto market news]
+2. [one sentence about crypto market news]
+3. [one sentence about crypto market news]
 
 REGULATION:
-1. [one sentence]
-2. [one sentence]
-3. [one sentence]
+1. [one sentence about US crypto regulation news]
+2. [one sentence about US crypto regulation news]
+3. [one sentence about US crypto regulation news]
 
 PROTOCOLS:
-1. [one sentence]
-2. [one sentence]
-3. [one sentence]`
+1. [one sentence about blockchain protocol or DeFi news]
+2. [one sentence about blockchain protocol or DeFi news]
+3. [one sentence about blockchain protocol or DeFi news]
+
+Do not write anything before MARKETS: or after the last line. Fill in all 9 items.`
         }]
       })
     });
