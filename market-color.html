@@ -86,18 +86,21 @@
     .desk-note-text strong { color: #E6EDF3; font-weight: 500; }
 
     /* Reg strip */
-    .reg-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
-    .reg-item { background: #161B22; border: 0.5px solid #21262D; border-radius: 6px; padding: 1rem 1.2rem; }
-    .reg-tag { display: inline-block; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 6px; border-radius: 2px; margin-bottom: 0.5rem; }
-    .tag-active { background: #1F3A2D; color: #3FB950; }
-    .tag-pending { background: #2D1F1F; color: #F85149; }
-    .tag-watch { background: #1F2A3D; color: #58A6FF; }
-    .reg-title { font-size: 12px; font-weight: 500; color: #E6EDF3; margin-bottom: 0.3rem; }
-    .reg-desc { font-size: 11px; color: #8B949E; line-height: 1.6; }
 
     /* Loading state */
-    .loading { color: #8B949E; font-size: 11px; }
-    .error { color: #F85149; font-size: 11px; }
+
+    /* News section */
+    .news-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
+    .news-card { background: #161B22; border: 0.5px solid #21262D; border-radius: 6px; padding: 1.2rem; }
+    .news-card-title { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #8B949E; margin-bottom: 1rem; display: flex; align-items: center; gap: 6px; }
+    .news-icon { color: #E5374B; font-size: 10px; }
+    .news-loading { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #8B949E; padding: 0.5rem 0; }
+    .news-spinner { width: 10px; height: 10px; border: 1.5px solid #30363D; border-top-color: #E5374B; border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .news-list { list-style: none; padding: 0; }
+    .news-list li { padding: 7px 0; border-bottom: 0.5px solid #21262D; font-size: 11.5px; color: #C9D1D9; line-height: 1.6; }
+    .news-list li:last-child { border-bottom: none; padding-bottom: 0; }
+    .news-list li::before { content: '→'; color: #E5374B; margin-right: 6px; font-size: 10px; }
 
     /* Footer */
     .footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 0.5px solid #21262D; font-size: 11px; color: #8B949E; line-height: 1.7; }
@@ -234,28 +237,35 @@
     <div class="desk-note-text" id="desk-note-text">Loading market conditions...</div>
   </div>
 
-  <!-- Regulatory Landscape -->
-  <div class="section-label">AMER Regulatory Landscape</div>
-  <div class="reg-strip">
-    <div class="reg-item">
-      <span class="reg-tag tag-active">Enacted</span>
-      <div class="reg-title">GENIUS Act — Stablecoin Framework</div>
-      <div class="reg-desc">Signed into law 2025. Establishes federal framework for payment stablecoins, requiring 1:1 reserves and monthly disclosures. Accelerates institutional adoption of stablecoin settlement — directly relevant to Blockchain.com OTC settlement flows.</div>
+  <!-- Overnight News Brief -->
+  <div class="section-label">Overnight Briefing</div>
+  <div class="news-grid" id="news-grid">
+    <div class="news-card" id="news-markets">
+      <div class="news-card-title">
+        <span class="news-icon">◈</span> Crypto Markets
+      </div>
+      <div class="news-loading" id="news-markets-loading">
+        <div class="news-spinner"></div> Fetching overnight headlines...
+      </div>
+      <ul class="news-list" id="news-markets-list" style="display:none"></ul>
     </div>
-    <div class="reg-item">
-      <span class="reg-tag tag-pending">Expected 2026</span>
-      <div class="reg-title">Digital Asset Market Structure Bill</div>
-      <div class="reg-desc">Bipartisan legislation expected to pass in 2026. Will clarify SEC vs. CFTC jurisdiction over digital assets, establish spot market guidelines, and facilitate regulated digital asset securities trading — lowering compliance barriers for institutional OTC onboarding.</div>
+    <div class="news-card" id="news-reg">
+      <div class="news-card-title">
+        <span class="news-icon">◈</span> US Crypto Regulation
+      </div>
+      <div class="news-loading" id="news-reg-loading">
+        <div class="news-spinner"></div> Fetching regulatory updates...
+      </div>
+      <ul class="news-list" id="news-reg-list" style="display:none"></ul>
     </div>
-    <div class="reg-item">
-      <span class="reg-tag tag-active">In Effect</span>
-      <div class="reg-title">MiCA — EU Markets in Crypto Assets</div>
-      <div class="reg-desc">Blockchain.com secured MiCA license in late 2025, enabling custody and exchange services across all 27 EU member states. Signals institutional-grade regulatory credibility relevant to AMER clients operating globally.</div>
-    </div>
-    <div class="reg-item">
-      <span class="reg-tag tag-watch">Monitor</span>
-      <div class="reg-title">CFTC Swap Dealer Classification</div>
-      <div class="reg-desc">Ongoing CFTC rulemaking may bring bilateral crypto derivatives (including OTC options and NDFs) under Swap Dealer registration requirements. Key consideration for institutional clients entering OTC options programs with Blockchain.com's desk.</div>
+    <div class="news-card" id="news-protocols">
+      <div class="news-card-title">
+        <span class="news-icon">◈</span> Emerging Protocols
+      </div>
+      <div class="news-loading" id="news-protocols-loading">
+        <div class="news-spinner"></div> Fetching protocol developments...
+      </div>
+      <ul class="news-list" id="news-protocols-list" style="display:none"></ul>
     </div>
   </div>
 
@@ -512,6 +522,72 @@ function generateDeskNote() {
   }, 2500);
 }
 
+async function fetchNewsSection(topic, listId, loadingId, prompt) {
+  const loadingEl = document.getElementById(loadingId);
+  const listEl = document.getElementById(listId);
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await response.json();
+    // Extract text from response
+    const textBlock = data.content && data.content.find(b => b.type === 'text');
+    const text = textBlock ? textBlock.text : null;
+    if (!text) throw new Error('No text response');
+
+    // Parse bullet points — expect lines starting with - or • or numbers
+    const lines = text.split('\n')
+      .map(l => l.replace(/^[\-\•\*\d\.]+\s*/, '').trim())
+      .filter(l => l.length > 20);
+
+    loadingEl.style.display = 'none';
+    listEl.style.display = 'block';
+    lines.slice(0, 5).forEach(line => {
+      const li = document.createElement('li');
+      li.textContent = line;
+      listEl.appendChild(li);
+    });
+    if (lines.length === 0) {
+      loadingEl.textContent = 'No recent headlines found.';
+    }
+  } catch(e) {
+    loadingEl.innerHTML = '<span style="color:#F85149">Unable to load — check API connectivity.</span>';
+    console.warn('News fetch error:', e);
+  }
+}
+
+async function loadNews() {
+  const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+  fetchNewsSection(
+    'markets',
+    'news-markets-list',
+    'news-markets-loading',
+    `Search for the top 5 most important cryptocurrency and Bitcoin market news headlines from the last 24 hours as of ${today}. Focus on price movements, major institutional activity, exchange news, and significant market events. Return only a plain bulleted list of 5 concise one-sentence headlines, no preamble, no markdown formatting, no bold text.`
+  );
+
+  fetchNewsSection(
+    'reg',
+    'news-reg-list',
+    'news-reg-loading',
+    `Search for the latest US cryptocurrency regulation news from the last 7 days as of ${today}. Focus on SEC, CFTC, Congress, White House, and federal agency developments related to digital assets, crypto market structure legislation, and stablecoin regulation. Return only a plain bulleted list of 5 concise one-sentence updates, no preamble, no markdown formatting, no bold text.`
+  );
+
+  fetchNewsSection(
+    'protocols',
+    'news-protocols-list',
+    'news-protocols-loading',
+    `Search for the latest emerging blockchain protocol and DeFi news from the last 7 days as of ${today}. Focus on new protocol launches, major upgrades, Layer 2 developments, DeFi milestones, and significant on-chain developments relevant to institutional investors. Return only a plain bulleted list of 5 concise one-sentence updates, no preamble, no markdown formatting, no bold text.`
+  );
+}
+
 async function loadAll() {
   updateTimestamp();
   document.getElementById('desk-note-text').textContent = 'Loading market conditions...';
@@ -519,6 +595,7 @@ async function loadAll() {
   await loadDeribit();
   await loadFunding();
   generateDeskNote();
+  loadNews();
 }
 
 loadAll();
