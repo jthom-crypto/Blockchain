@@ -522,77 +522,96 @@ function generateDeskNote() {
   }, 2500);
 }
 
-async function fetchNewsSection(topic, listId, loadingId, prompt) {
-  const loadingEl = document.getElementById(loadingId);
-  const listEl = document.getElementById(listId);
+
+async function loadNews() {
+  const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  const cacheKey = 'blockchain_news_' + new Date().toLocaleDateString();
+  const cached = sessionStorage.getItem(cacheKey);
+
+  if (cached) {
+    const data = JSON.parse(cached);
+    renderNews('news-markets-list', 'news-markets-loading', data.markets);
+    renderNews('news-reg-list', 'news-reg-loading', data.reg);
+    renderNews('news-protocols-list', 'news-protocols-loading', data.protocols);
+    return;
+  }
+
+  // Single API call for all three sections
   try {
     const response = await fetch('/.netlify/functions/claude-proxy', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        messages: [{ role: 'user', content: prompt }]
+        messages: [{
+          role: 'user',
+          content: `Search for today's crypto news as of ${today}. Return exactly this format with no other text:
+
+MARKETS:
+1. [one sentence]
+2. [one sentence]
+3. [one sentence]
+
+REGULATION:
+1. [one sentence]
+2. [one sentence]
+3. [one sentence]
+
+PROTOCOLS:
+1. [one sentence]
+2. [one sentence]
+3. [one sentence]`
+        }]
       })
     });
+
     const data = await response.json();
-    // Extract text from response
     const textBlock = data.content && data.content.find(b => b.type === 'text');
-    const text = textBlock ? textBlock.text : null;
-    if (!text) throw new Error('No text response');
+    const text = textBlock ? textBlock.text : '';
 
-    // Parse bullet points — expect lines starting with - or • or numbers
-    // Split on newlines first, then also try splitting on numbered pattern
-    let lines = text.split('\n');
-    // Also try splitting inline numbered items like "1. headline 2. headline"
-    if (lines.length <= 2) {
-      lines = text.split(/(?=\d+\.)/);
-    }
-    const parsed = lines
-      .map(l => l.replace(/^[\-\•\*\d\.]+\s*/, '').trim())
-      .filter(l => l.length > 20 && !l.endsWith(':'));
+    // Parse sections
+    const marketsMatch = text.match(/MARKETS:([\s\S]*?)(?=REGULATION:|$)/);
+    const regMatch = text.match(/REGULATION:([\s\S]*?)(?=PROTOCOLS:|$)/);
+    const protocolsMatch = text.match(/PROTOCOLS:([\s\S]*?)$/);
 
-    loadingEl.style.display = 'none';
-    listEl.style.display = 'block';
-    parsed.slice(0, 3).forEach(line => {
-      const li = document.createElement('li');
-      li.textContent = line;
-      listEl.appendChild(li);
-    });
-    if (parsed.length === 0) {
-      loadingEl.textContent = 'No recent headlines found.';
-    }
+    const parseItems = (block) => block ? block[1].split('\n')
+      .map(l => l.replace(/^[\d\.]+\s*/, '').trim())
+      .filter(l => l.length > 15) : [];
+
+    const result = {
+      markets: parseItems(marketsMatch),
+      reg: parseItems(regMatch),
+      protocols: parseItems(protocolsMatch)
+    };
+
+    // Cache for the day
+    sessionStorage.setItem(cacheKey, JSON.stringify(result));
+
+    renderNews('news-markets-list', 'news-markets-loading', result.markets);
+    renderNews('news-reg-list', 'news-reg-loading', result.reg);
+    renderNews('news-protocols-list', 'news-protocols-loading', result.protocols);
+
   } catch(e) {
-    loadingEl.innerHTML = '<span style="color:#F85149">Unable to load — check API connectivity.</span>';
-    console.warn('News fetch error:', e);
+    ['news-markets-loading','news-reg-loading','news-protocols-loading'].forEach(id => {
+      document.getElementById(id).innerHTML = '<span style="color:#F85149">Unable to load.</span>';
+    });
   }
 }
 
-async function loadNews() {
-  const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-
-  fetchNewsSection(
-    'markets',
-    'news-markets-list',
-    'news-markets-loading',
-    `Search for the top 5 most important cryptocurrency and Bitcoin market news headlines from the last 24 hours as of ${today}. Focus on price movements, major institutional activity, exchange news, and significant market events. Return ONLY a plain numbered list of 5 concise one-sentence headlines. No introduction, no preamble, no conclusion, no markdown, no bold text. Start directly with 1.`
-  );
-
-  await new Promise(r => setTimeout(r, 2000));
-
-  fetchNewsSection(
-    'reg',
-    'news-reg-list',
-    'news-reg-loading',
-    `Search for the latest US cryptocurrency regulation news from the last 7 days as of ${today}. Focus on SEC, CFTC, Congress, White House, and federal agency developments related to digital assets, crypto market structure legislation, and stablecoin regulation. Return ONLY a plain numbered list of 5 concise one-sentence updates. No introduction, no preamble, no conclusion, no markdown, no bold text. Start directly with 1.`
-  );
-
-  await new Promise(r => setTimeout(r, 2000));
-
-  fetchNewsSection(
-    'protocols',
-    'news-protocols-list',
-    'news-protocols-loading',
-    `Search for the latest emerging blockchain protocol and DeFi news from the last 7 days as of ${today}. Focus on new protocol launches, major upgrades, Layer 2 developments, DeFi milestones, and significant on-chain developments relevant to institutional investors. Return ONLY a plain numbered list of 5 concise one-sentence updates. No introduction, no preamble, no conclusion, no markdown, no bold text. Start directly with 1.`
-  );
+function renderNews(listId, loadingId, items) {
+  const loadingEl = document.getElementById(loadingId);
+  const listEl = document.getElementById(listId);
+  loadingEl.style.display = 'none';
+  listEl.style.display = 'block';
+  if (!items || items.length === 0) {
+    loadingEl.style.display = 'block';
+    loadingEl.innerHTML = '<span style="color:#F85149">No headlines found.</span>';
+    return;
+  }
+  items.slice(0, 3).forEach(line => {
+    const li = document.createElement('li');
+    li.textContent = line;
+    listEl.appendChild(li);
+  });
 }
 
 async function loadAll() {
