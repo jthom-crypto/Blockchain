@@ -203,11 +203,11 @@
     <div class="card">
       <div class="card-title">OTC Desk Conditions</div>
       <div class="metric-row">
-        <span class="metric-name">BTC 30d Realized Vol</span>
+        <span class="metric-name">BTC 30d Avg DVOL</span>
         <span class="metric-val" id="btc-rvol">—</span>
       </div>
       <div class="metric-row">
-        <span class="metric-name">IV / RV Premium</span>
+        <span class="metric-name">DVOL vs 30d Avg</span>
         <span class="metric-val" id="iv-rv-spread">—</span>
       </div>
       <div class="metric-row">
@@ -473,8 +473,8 @@ async function loadOTCConditions() {
   try {
     const now = Date.now();
 
-    // 30d Realized Vol using DVOL history (already CORS-approved)
-    const rvolR = await fetch('https://www.deribit.com/api/v2/public/get_volatility_index_data?currency=BTC&resolution=86400000&start_timestamp=' + (now - 32 * 24 * 3600 * 1000) + '&end_timestamp=' + now);
+    // 30d average DVOL using hourly resolution (known working endpoint)
+    const rvolR = await fetch('https://www.deribit.com/api/v2/public/get_volatility_index_data?currency=BTC&resolution=3600&start_timestamp=' + (now - 30 * 24 * 3600 * 1000) + '&end_timestamp=' + now);
     const rvolData = await rvolR.json();
     console.log('RVOL data:', rvolData.result?.data?.length);
 
