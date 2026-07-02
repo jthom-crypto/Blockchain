@@ -211,7 +211,7 @@
         <span class="metric-val" id="iv-rv-spread">—</span>
       </div>
       <div class="metric-row">
-        <span class="metric-name">25δ Put/Call Skew</span>
+        <span class="metric-name">OTM Put/Call IV Spread</span>
         <span class="metric-val" id="skew-val">—</span>
       </div>
       <div class="metric-row">
@@ -284,10 +284,6 @@
         <span class="metric-name">Stablecoin OTC Settlement Share</span>
         <span class="metric-val">78%</span>
       </div>
-      <div class="metric-row">
-        <span class="metric-name">Est. Daily OTC Liquidity Access</span>
-        <span class="metric-val">>$1.5T</span>
-      </div>
     </div>
     <div class="card">
       <div class="card-title">Options Market Structure</div>
@@ -296,11 +292,11 @@
         <span class="metric-val">~88%</span>
       </div>
       <div class="metric-row">
-        <span class="metric-name">IBIT Options Open Interest</span>
+        <span class="metric-name">BTC Options Market OI (Deribit)</span>
         <span class="metric-val">~$40B</span>
       </div>
       <div class="metric-row">
-        <span class="metric-name">Covered Call Annualised Yield</span>
+        <span class="metric-name">Covered Call Yield (Illustrative)</span>
         <span class="metric-val pos">12–18%</span>
       </div>
       <div class="metric-row">
@@ -315,7 +311,7 @@
   </div>
 
   <div class="footer">
-    Live data: BTC/ETH spot via CoinGecko API · Options data via Deribit public API · Funding rates via Binance public API.<br>
+    Live data: BTC/ETH spot via CoinGecko API · Options and derivatives data via Deribit public API.<br>
     OTC market statistics: Finery Markets State of Crypto OTC 2026 · Options market data: CryptoSlate, June 2026.<br>
     Regulatory landscape: GENIUS Act (2025) · Grayscale 2026 Digital Asset Outlook · CFTC public rulemaking.<br>
     Prepared by Justin Thom for Blockchain.com Institutional Sales Associate application · July 2026. For illustrative purposes only.
@@ -545,17 +541,13 @@ function generateDeskNote() {
     const pcr = document.getElementById('pcr-val').textContent;
     const dvolNum = parseFloat(dvol) || 50;
     const pcrNum = parseFloat(pcr) || 0.6;
-    const btcFunding = '+0.0100%';
-    const fundingNum = 0.01;
 
     const volColor = dvolNum > 70 ? 'elevated' : dvolNum > 50 ? 'moderate' : 'compressed';
     const pcrSentiment = pcrNum > 0.8 ? 'put-heavy, suggesting institutional demand for downside protection' : pcrNum < 0.5 ? 'call-dominated, reflecting a bullish positioning tilt' : 'balanced, indicating a neutral institutional posture';
-    const fundingNote = Math.abs(fundingNum) < 0.005 ? 'Perpetual funding is near flat, consistent with a range-bound spot market.' : fundingNum > 0.01 ? `Perpetual funding is elevated at ${btcFunding}, indicating longs are paying a premium — basis trades may be compressing.` : `Funding has flipped negative at ${btcFunding}, suggesting short-side pressure in the derivatives market.`;
 
     document.getElementById('desk-note-text').innerHTML =
       `BTC is trading at <strong>${btcPrice}</strong> (${btcChg}). ` +
       `Implied volatility (DVOL) is <strong>${volColor} at ${dvol}</strong>, with the options market ${pcrSentiment} at a put/call ratio of <strong>${pcr}</strong>. ` +
-      `${fundingNote} ` +
       `Against this backdrop, the Blockchain.com OTC desk is well-positioned to structure <strong>zero-cost collars for treasury-heavy clients</strong> seeking downside protection without premium outlay, and <strong>covered call yield programs</strong> for institutions holding idle BTC at current implied vol levels. ` +
       `Block spot demand from ETF rebalancing flows and miner production sales remains the primary near-term driver for OTC execution volumes.`;
   }, 2500);
