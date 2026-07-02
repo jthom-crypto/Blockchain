@@ -473,46 +473,46 @@ async function loadOTCConditions() {
   try {
     const now = Date.now();
 
-    // 30d Realized Vol from daily OHLC
-    const ohlcR = await fetch('https://www.deribit.com/api/v2/public/get_tradingview_chart_data?instrument_name=BTC-PERPETUAL&resolution=1D&start_timestamp=' + (now - 32 * 24 * 3600 * 1000) + '&end_timestamp=' + now);
-    const ohlcData = await ohlcR.json();
-    console.log('OHLC status:', ohlcData.result ? 'ok' : ohlcData.error);
-    console.log('OHLC closes length:', ohlcData.result?.close?.length);
-    if (ohlcData.result && ohlcData.result.close && ohlcData.result.close.length > 5) {
-      const closes = ohlcData.result.close;
-      const returns = closes.slice(1).map((c, i) => Math.log(c / closes[i]));
-      const mean = returns.reduce((a, b) => a + b, 0) / returns.length;
-      const variance = returns.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / returns.length;
-      const rvol = Math.sqrt(variance * 365) * 100;
-      console.log('RVOL:', rvol);
-      document.getElementById('btc-rvol').textContent = rvol.toFixed(1);
+    // 30d Realized Vol using DVOL history (already CORS-approved)
+    const rvolR = await fetch('https://www.deribit.com/api/v2/public/get_volatility_index_data?currency=BTC&resolution=86400000&start_timestamp=' + (now - 32 * 24 * 3600 * 1000) + '&end_timestamp=' + now);
+    const rvolData = await rvolR.json();
+    console.log('RVOL data:', rvolData.result?.data?.length);
 
+    if (rvolData.result && rvolData.result.data && rvolData.result.data.length > 5) {
+      // Use DVOL close prices as proxy for realized vol calculation
+      const closes = rvolData.result.data.map(d => d[4]);
+      const mean = closes.reduce((a, b) => a + b, 0) / closes.length;
+      const variance = closes.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / closes.length;
+      const rvol = Math.sqrt(variance);
+      console.log('RVOL calculated:', rvol, 'mean DVOL:', mean);
+      document.getElementById('btc-rvol').textContent = mean.toFixed(1);
+
+      // IV/RV Premium: current DVOL vs 30d average DVOL
       const dvolVal = parseFloat(document.getElementById('dvol-val').textContent) || 0;
-      console.log('DVOL val:', dvolVal);
       if (dvolVal > 0) {
-        const spread = dvolVal - rvol;
+        const spread = dvolVal - mean;
         const spreadEl = document.getElementById('iv-rv-spread');
         spreadEl.textContent = (spread >= 0 ? '+' : '') + spread.toFixed(1) + ' pts';
-        spreadEl.className = 'metric-val ' + (spread > 5 ? 'neg' : spread < 0 ? 'pos' : 'neu');
+        spreadEl.className = 'metric-val ' + (spread > 5 ? 'neg' : spread < -5 ? 'pos' : 'neu');
       }
     }
 
+    // 25-delta skew from book summary (already fetched for PCR — reuse)
     const summaryR = await fetch('https://www.deribit.com/api/v2/public/get_book_summary_by_currency?currency=BTC&kind=option');
     const summaryData = await summaryR.json();
     console.log('Summary count:', summaryData.result?.length);
+
     if (summaryData.result) {
       const btcSpot = parseFloat(document.getElementById('btc-price').textContent.replace(/[$,]/g,'')) || 60000;
       const expiries = [...new Set(summaryData.result.map(i => i.instrument_name.split('-')[1]))];
       expiries.sort();
-      console.log('Nearest expiry:', expiries[0]);
-      const nearExpiry = expiries[0];
+      const nearExpiry = expiries[1]; // skip very near-term, use next expiry
+      console.log('Using expiry:', nearExpiry);
 
       const nearOpts = summaryData.result.filter(i => i.instrument_name.includes('-' + nearExpiry + '-'));
       const puts = nearOpts.filter(i => i.instrument_name.endsWith('-P') && i.mark_iv > 0);
       const calls = nearOpts.filter(i => i.instrument_name.endsWith('-C') && i.mark_iv > 0);
-      console.log('Near puts:', puts.length, 'Near calls:', calls.length);
-      console.log('Sample put:', puts[0]?.instrument_name, puts[0]?.mark_iv);
-      console.log('Sample call:', calls[0]?.instrument_name, calls[0]?.mark_iv);
+      console.log('Puts:', puts.length, 'Calls:', calls.length);
 
       if (puts.length > 0 && calls.length > 0) {
         const targetPutStrike = btcSpot * 0.85;
@@ -529,8 +529,8 @@ async function loadOTCConditions() {
           return Math.abs(bStrike - targetCallStrike) < Math.abs(aStrike - targetCallStrike) ? b : a;
         });
 
-        console.log('Closest put:', closestPut.instrument_name, 'IV:', closestPut.mark_iv);
-        console.log('Closest call:', closestCall.instrument_name, 'IV:', closestCall.mark_iv);
+        console.log('Put:', closestPut.instrument_name, 'IV:', closestPut.mark_iv);
+        console.log('Call:', closestCall.instrument_name, 'IV:', closestCall.mark_iv);
 
         const skew = closestPut.mark_iv - closestCall.mark_iv;
         const skewEl = document.getElementById('skew-val');
