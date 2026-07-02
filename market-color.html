@@ -233,7 +233,7 @@
 
   <!-- Desk Note -->
   <div class="desk-note">
-    <div class="desk-note-label">OTC Desk Note — Today's Colour</div>
+    <div class="desk-note-label">OTC Desk Note — Today's Color</div>
     <div class="desk-note-text" id="desk-note-text">Loading market conditions...</div>
   </div>
 
@@ -392,7 +392,9 @@ async function loadGlobal() {
 async function loadDeribit() {
   try {
     // DVOL BTC
-    const dvR = await fetch('https://www.deribit.com/api/v2/public/get_volatility_index_data?currency=BTC&resolution=3600&count=1');
+    const now = Date.now();
+    const oneHourAgo = now - 3600000;
+    const dvR = await fetch(`https://www.deribit.com/api/v2/public/get_volatility_index_data?currency=BTC&resolution=3600&start_timestamp=${oneHourAgo}&end_timestamp=${now}`);
     const dvData = await dvR.json();
     let btcDvol = null;
     if (dvData.result && dvData.result.data && dvData.result.data.length) {
@@ -407,7 +409,7 @@ async function loadDeribit() {
     }
 
     // DVOL ETH
-    const dvEthR = await fetch('https://www.deribit.com/api/v2/public/get_volatility_index_data?currency=ETH&resolution=3600&count=1');
+    const dvEthR = await fetch(`https://www.deribit.com/api/v2/public/get_volatility_index_data?currency=ETH&resolution=3600&start_timestamp=${oneHourAgo}&end_timestamp=${now}`);
     const dvEthData = await dvEthR.json();
     if (dvEthData.result && dvEthData.result.data && dvEthData.result.data.length) {
       const ethDvol = dvEthData.result.data[dvEthData.result.data.length - 1][4];
