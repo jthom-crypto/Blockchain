@@ -1,5 +1,4 @@
-# Blockchain.com — Institutional Sales Associate Application
-
+# Blockchain.com
 Projects built for the Institutional Sales Associate role at Blockchain.com
 
 **Live site:** [jthom-crypto.github.io/Blockchain](https://jthom-crypto.github.io/Blockchain/)
